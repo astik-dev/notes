@@ -1,0 +1,426 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+* {
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+*, *:before, *:after {
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+:focus, :active {
+	outline: none;
+}
+
+a:focus, a:active {
+	outline: none;
+}
+
+nav, footer, header, aside {
+	display: block;
+}
+
+html, body {
+	height: 100%;
+	width: 100%;
+	font-size: 100%;
+	line-height: 1;
+	font-size: 14px;
+	-ms-text-size-adjust: 100%;
+	-moz-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+}
+
+input, button, textarea {
+	font-family: inherit;
+}
+
+input::-ms-clear {
+	display: none;
+}
+
+button {
+	cursor: pointer;
+}
+
+button::-moz-focus-inner {
+	padding: 0;
+	border: 0;
+}
+
+a, a:visited {
+	text-decoration: none;
+}
+
+a:hover {
+	font-style: none;
+}
+
+ul li {
+	list-style: none;
+}
+
+img {
+	vertical-align: top;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: inherit;
+	font-weight: 400;
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: #FFFFFF;
+	border-radius: 2.5px;
+}
+
+::-moz-placeholder, :-moz-placeholder {
+	opacity: 1;
+}
+
+body {
+	background-color: #333;
+	font-family: "IBM Plex Mono", monospace;
+	color: #FFFFFF;
+	overflow: hidden;
+	scrollbar-width: thin;
+	scrollbar-color: white #333;
+}
+
+h1 {
+	font-size: 30px;
+	font-weight: 600;
+}
+
+.pop-up {
+	z-index: 1;
+	position: absolute;
+	width: 100vw;
+	height: var(--vh100, 100vh);
+	background-color: rgba(51, 51, 51, 0.7);
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	    -ms-flex-align: center;
+	        align-items: center;
+	-webkit-box-pack: center;
+	    -ms-flex-pack: center;
+	        justify-content: center;
+	visibility: hidden;
+	opacity: 0;
+	-webkit-transition: all 0.2s ease 0s;
+	transition: all 0.2s ease 0s;
+}
+.pop-up__body {
+	margin: 0 0 100px 0;
+	border-radius: 15px;
+	border: 4px solid rgba(255, 255, 255, 0.9);
+	width: 270px;
+	color: rgba(255, 255, 255, 0.9);
+	background-color: rgba(51, 51, 51, 0.9);
+	font-size: 16px;
+	-webkit-transition: all 0.2s ease 0s;
+	transition: all 0.2s ease 0s;
+	opacity: 0;
+	-webkit-transform: scale(0, 0);
+	        transform: scale(0, 0);
+}
+.pop-up__title {
+	text-align: center;
+	font-weight: 600;
+	padding: 7px 0;
+}
+.pop-up__text {
+	line-height: 20px;
+	border-top: 2px solid rgba(255, 255, 255, 0.9);
+	padding: 7px;
+}
+.pop-up__buttons {
+	padding: 3px 7px 7px 7px;
+	text-align: right;
+	letter-spacing: none;
+}
+.pop-up__buttons button:nth-child(1) {
+	margin: 0 6px 0 0;
+	background-color: rgba(51, 51, 51, 0.9);
+	color: rgba(255, 255, 255, 0.9);
+}
+.pop-up__buttons button:nth-child(1):hover {
+	margin: 0 6px 0 0;
+	background-color: rgba(70, 70, 70, 0.9);
+	color: rgba(255, 255, 255, 0.9);
+}
+.pop-up__button {
+	font-size: 14px;
+	display: inline-block;
+	background-color: rgba(255, 255, 255, 0.9);
+	color: rgba(51, 51, 51, 0.9);
+	border-radius: 4px;
+	padding: 1px 5px;
+	font-weight: 700;
+	border: 2px solid rgba(255, 255, 255, 0.9);
+}
+.pop-up__button:hover {
+	background-color: rgba(240, 240, 240, 0.9);
+	color: rgba(51, 51, 51, 0.9);
+	border: 2px solid rgba(240, 240, 240, 0.9);
+}
+
+.wrapper {
+	max-width: 1000px;
+	margin: 0 auto;
+	display: -ms-grid;
+	display: grid;
+	-ms-grid-columns: auto 1fr 50px;
+	grid-template-columns: auto 1fr 50px;
+	-ms-grid-rows: 47px 1fr;
+	grid-template-rows: 47px 1fr;
+}
+
+.wrapper > *:nth-child(1) {
+	-ms-grid-row: 1;
+	-ms-grid-column: 1;
+}
+
+.wrapper > *:nth-child(2) {
+	-ms-grid-row: 1;
+	-ms-grid-column: 2;
+}
+
+.wrapper > *:nth-child(3) {
+	-ms-grid-row: 1;
+	-ms-grid-column: 3;
+}
+
+.wrapper > *:nth-child(4) {
+	-ms-grid-row: 2;
+	-ms-grid-column: 1;
+}
+
+.wrapper > *:nth-child(5) {
+	-ms-grid-row: 2;
+	-ms-grid-column: 2;
+}
+
+.wrapper > *:nth-child(6) {
+	-ms-grid-row: 2;
+	-ms-grid-column: 3;
+}
+.wrapper .header {
+	border: 1px solid #FFFFFF;
+	border-top: 0px;
+	-ms-grid-column: 1;
+	-ms-grid-column-span: 3;
+	grid-column: 1/4;
+}
+.wrapper .header__title {
+	padding: 8px 0 8px 0px;
+	width: 200px;
+	text-align: center;
+}
+.wrapper .header__title h1 {
+	display: inline-block;
+	position: relative;
+}
+.wrapper .header__title h1:before {
+	content: "AST";
+	font-size: 12px;
+	color: #ff0000;
+	font-weight: 700;
+	font-style: italic;
+	position: absolute;
+	top: 3px;
+	left: -25px;
+}
+.wrapper .aside1 {
+	border-left: 1px solid #FFFFFF;
+}
+.wrapper .aside1__menu {
+	margin: 0 5px 0 10px;
+	height: calc(var(--vh100, 100vh) - 47px);
+	font-size: 18px;
+	display: -ms-grid;
+	display: grid;
+	-ms-grid-rows: auto 1fr;
+	grid-template-rows: auto 1fr;
+}
+.wrapper .aside1__title {
+	margin: 17.5px 0 7.5px 0;
+}
+.wrapper .aside1__svg {
+	height: 18px;
+	margin: 1px 4px 0 0;
+}
+.wrapper .aside1__empty {
+	display: inline-block;
+	font-size: 14px;
+	color: #757575;
+	width: 180px;
+}
+.wrapper .aside1__all-notes {
+	height: 100%;
+	overflow-y: scroll;
+	padding: 0 5px 0 0;
+	border-bottom: 25px solid #333;
+	scrollbar-width: thin;
+	scrollbar-color: white #333;
+}
+.wrapper .aside1__button {
+	background-color: #FFFFFF;
+	font-size: 13px;
+	line-height: 20px;
+	border-radius: 5px;
+	color: #333;
+	font-weight: 700;
+	padding: 0 5px;
+	width: 180px;
+	height: 22px;
+	margin: 0 0 7.5px 0;
+	text-align: left;
+	border: 1px solid #FFFFFF;
+	overflow: hidden;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+}
+.wrapper .aside1__button svg {
+	fill: #333;
+	height: 18px;
+	margin: 1px 4px 0 0;
+}
+.wrapper .aside1__button:hover {
+	background-color: #333;
+	color: #FFFFFF;
+}
+.wrapper .aside1__button:hover svg {
+	fill: #fff;
+}
+.wrapper .aside1 ._active {
+	background-color: #333;
+	color: #FFFFFF;
+}
+.wrapper .aside1 ._active svg {
+	fill: #fff;
+}
+.wrapper .aside1 ._error {
+	background-color: #ff0000;
+	color: #FFFFFF;
+}
+.wrapper .aside1 ._error svg {
+	fill: #FFFFFF;
+}
+.wrapper .main {
+	border-left: 1px solid #FFFFFF;
+	border-right: 1px solid #FFFFFF;
+}
+.wrapper .main .note {
+	display: -ms-grid;
+	display: grid;
+	height: 100%;
+	-ms-grid-rows: auto 1fr;
+	grid-template-rows: auto 1fr;
+	margin: 0 25px;
+}
+.wrapper .main .note__title, .wrapper .main .note__textarea {
+	background-color: #333;
+	color: #FFFFFF;
+	resize: none;
+}
+.wrapper .main .note__title {
+	min-width: 1px;
+	margin: 25px 0 0 0;
+	font-size: 20px;
+	line-height: 26px;
+	font-weight: 500;
+	border-bottom: 1px solid #FFFFFF;
+	padding: 0 1px 10px 1px;
+	overflow: hidden;
+	height: 37px;
+}
+.wrapper .main .note__textarea {
+	min-width: 1px;
+	padding: 8px 1px 0 1px;
+	margin: 0 0 25px 0;
+	font-size: 16px;
+	line-height: 22px;
+	font-weight: 400;
+	scrollbar-width: thin;
+	scrollbar-color: white #333;
+}
+.wrapper .main textarea::-webkit-input-placeholder {
+	color: #757575;
+}
+.wrapper .main textarea::-moz-placeholder {
+	color: #757575;
+}
+.wrapper .main textarea:-ms-input-placeholder {
+	color: #757575;
+}
+.wrapper .main textarea::-ms-input-placeholder {
+	color: #757575;
+}
+.wrapper .main textarea::placeholder {
+	color: #757575;
+}
+.wrapper .main ._error textarea::-webkit-input-placeholder {
+	color: #ff0000;
+}
+.wrapper .main ._error textarea::-moz-placeholder {
+	color: #ff0000;
+}
+.wrapper .main ._error textarea:-ms-input-placeholder {
+	color: #ff0000;
+}
+.wrapper .main ._error textarea::-ms-input-placeholder {
+	color: #ff0000;
+}
+.wrapper .main ._error textarea::placeholder {
+	color: #ff0000;
+}
+.wrapper .aside2 {
+	border-right: 1px solid #FFFFFF;
+}
+.wrapper .aside2__menu {
+	padding: 7.5px 0 0 0;
+	display: -ms-grid;
+	display: grid;
+	gap: 7.5px;
+	justify-items: center;
+}
+.wrapper .aside2__button {
+	height: 35px;
+	width: 35px;
+	border-radius: 10px;
+	background-color: #FFFFFF;
+	border: 2px solid #FFFFFF;
+}
+.wrapper .aside2__button svg {
+	fill: #333;
+	height: 26px;
+	margin: 2px 0 0 0;
+}
+.wrapper .aside2__button:hover {
+	background-color: #333;
+}
+.wrapper .aside2__button:hover svg {
+	fill: #FFFFFF;
+}
+.wrapper .aside2 ._error {
+	background-color: #ff0000;
+}
+.wrapper .aside2 ._error svg {
+	fill: #FFFFFF;
+}
+.wrapper .aside2 ._successful {
+	background-color: green;
+}
+.wrapper .aside2 ._successful svg {
+	fill: #FFFFFF;
+}

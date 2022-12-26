@@ -1,0 +1,320 @@
+@import "nullstyle.scss";
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
+
+::-webkit-scrollbar {
+  	width: 5px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #FFFFFF;
+    border-radius: 2.5px;
+}
+::-moz-placeholder, :-moz-placeholder {
+    opacity: 1;
+}
+
+body {
+	background-color: #333;
+	font-family: 'IBM Plex Mono', monospace;
+	color: #FFFFFF;
+
+	overflow: hidden;
+	
+	scrollbar-width: thin;
+ 	scrollbar-color: white #333;
+}
+
+h1 {
+	font-size: 30px;
+	font-weight: 600;
+}
+
+// =============== pop-up ===============
+.pop-up{
+	z-index: 1;	
+	position: absolute;
+	width: 100vw;
+	height: var(--vh100, 100vh);
+	background-color: rgba(51, 51, 51, 0.7);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	visibility: hidden;
+	opacity: 0;
+	transition: all 0.2s ease 0s;
+
+	&__body {
+		margin: 0 0 100px 0;
+		border-radius: 15px;
+		border: 4px solid rgba(255, 255, 255, 0.9);
+		width: 270px;
+		color: rgba(255, 255, 255, 0.9);
+		background-color: rgba(51, 51, 51, 0.9);
+		font-size: 16px;
+
+		transition: all 0.2s ease 0s;
+		opacity: 0;
+		transform: scale(0, 0);
+	}
+	&__title {
+		text-align: center;
+		font-weight: 600;
+		padding: 7px 0;
+	}
+	&__text {
+		line-height: 20px;
+		border-top: 2px solid rgba(255, 255, 255, 0.9);
+		padding: 7px;
+	}
+	&__buttons {
+		padding: 3px 7px 7px 7px;
+		text-align: right;
+		letter-spacing: none;
+
+		button:nth-child(1) {
+			margin: 0 6px 0 0;
+			background-color: rgba(51, 51, 51, 0.9);
+			color: rgba(255, 255, 255, 0.9);
+		}
+		button:nth-child(1):hover {
+			margin: 0 6px 0 0;
+			background-color: rgba(70, 70, 70, 0.9);
+			color: rgba(255, 255, 255, 0.9);
+		}
+	}
+	&__button {
+		font-size: 14px;
+		display: inline-block;
+		background-color: rgba(255, 255, 255, 0.9);
+		color: rgba(51, 51, 51, 0.9);
+		border-radius: 4px;
+		padding: 1px 5px;
+		font-weight: 700;
+		border: 2px solid rgba(255, 255, 255, 0.9);
+
+		&:hover {
+			//background-color: rgba(51, 51, 51, 0.9);
+			//color: rgba(255, 255, 255, 0.9);
+			background-color: rgba(240, 240, 240, 0.9);
+			color: rgba(51, 51, 51, 0.9);
+			border: 2px solid rgba(240, 240, 240, 0.9);
+		}
+	}
+}
+
+// =============== wrapper ===============
+.wrapper {
+	max-width: 1000px;
+	margin: 0 auto;
+	display: grid;
+	grid-template-columns: auto 1fr 50px;
+	grid-template-rows: 47px 1fr;
+
+	// =============== header ===============
+	.header {
+		border: 1px solid #FFFFFF;
+		border-top: 0px;
+		grid-column: 1/4;
+		&__title {	
+			padding: 8px 0 8px 0px;
+			width: 200px;
+			text-align: center;		
+
+			h1 {
+				display: inline-block;
+				position: relative;	
+			}
+			h1:before {
+				content: "AST";
+				font-size: 12px;
+				color: #ff0000;
+				font-weight: 700;
+				font-style: italic;
+				position: absolute;	
+				top: 3px;
+				left: -25px;
+			}
+		}
+	}
+
+	// =============== aside1 ===============
+	.aside1 {
+		border-left: 1px solid #FFFFFF;
+
+		&__menu {
+			margin: 0 5px 0 10px;
+			height: calc(var(--vh100, 100vh) - 47px);
+			font-size: 18px;
+			display: grid;
+			grid-template-rows: auto 1fr;
+		}
+		&__title{
+			margin: 17.5px 0 7.5px 0;
+		}
+		&__svg {
+			height: 18px;
+			margin: 1px 4px 0 0;
+		}
+		&__empty {
+			display: inline-block;
+			font-size: 14px;
+			color: #757575;
+			width: 180px;
+		}
+		&__all-notes {
+			height: 100%;
+			overflow-y: scroll;
+			padding: 0 5px 0 0;
+			border-bottom: 25px solid #333;
+
+			scrollbar-width: thin;
+			scrollbar-color: white #333;
+		}
+
+		&__button {
+			background-color: #FFFFFF;
+			font-size: 13px;
+			line-height: 20px;
+			border-radius: 5px;
+			color: #333;
+			font-weight: 700;
+			padding: 0 5px;
+			width: 180px;
+			height: 22px;
+			margin: 0 0 7.5px 0;
+			text-align: left;
+			border: 1px solid #FFFFFF;
+			overflow: hidden;
+			display: flex;
+
+			svg {
+				fill: #333;
+				height: 18px;
+				margin: 1px 4px 0 0;
+			}
+
+			&:hover {
+				background-color: #333;
+				color: #FFFFFF;
+
+				svg {
+					fill: #fff;
+				}
+			}
+		}
+		._active {
+			background-color: #333;
+			color: #FFFFFF;
+			svg {
+				fill: #fff;
+			}
+		}
+		._error {
+			background-color: #ff0000;
+			color: #FFFFFF;
+
+			svg {
+				fill: #FFFFFF;
+			}
+		}
+	}
+
+	// =============== main ===============
+	.main {
+		border-left: 1px solid #FFFFFF;
+		border-right: 1px solid #FFFFFF;
+
+		.note {
+			display: grid;
+			height: 100%;
+			grid-template-rows: auto 1fr;
+			margin: 0 25px; 
+
+			&__title,
+			&__textarea {
+				background-color: #333;
+				color: #FFFFFF;
+				resize: none;
+			}
+
+			&__title {
+				min-width: 1px;
+				margin: 25px 0 0 0;
+				font-size: 20px;
+				line-height: 26px;
+				font-weight: 500;
+				border-bottom: 1px solid #FFFFFF;
+				padding: 0 1px 10px 1px;
+				overflow: hidden;
+				height: 37px;
+			}
+			&__textarea {
+				min-width: 1px;
+				padding: 8px 1px 0 1px;
+				margin: 0 0 25px 0;
+				font-size: 16px;
+				line-height: 22px;
+				font-weight: 400;
+				scrollbar-width: thin;
+				scrollbar-color: white #333; 
+			}
+		}
+		
+		textarea::placeholder {
+			color: #757575;
+		}
+		._error {
+			textarea::placeholder {
+				color: #ff0000;
+			}
+		}
+	}
+
+	// =============== aside2 ===============
+	.aside2 {
+		border-right: 1px solid #FFFFFF;
+
+		&__menu {
+			padding: 7.5px 0 0 0;
+			display: grid;
+			gap: 7.5px;
+			justify-items: center;
+		}
+
+		&__button {
+			height: 35px;
+			width: 35px;
+			border-radius: 10px;
+			background-color: #FFFFFF;
+			border: 2px solid #FFFFFF;
+
+			svg {
+				fill: #333;
+				height: 26px;
+				margin: 2px 0 0 0;
+			}
+
+			&:hover {
+				background-color: #333;
+
+				svg {
+					fill: #FFFFFF;
+				}
+			}
+		}
+		._error {
+			background-color: #ff0000;
+
+			svg {
+				fill: #FFFFFF;
+			}
+		}
+		._successful {
+			background-color: green;
+			svg {
+				fill: #FFFFFF;
+			}
+		}
+	}
+}
