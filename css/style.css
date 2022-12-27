@@ -99,7 +99,7 @@ h1 {
 }
 
 .pop-up {
-	z-index: 1;
+	z-index: 100;
 	position: absolute;
 	width: 100vw;
 	height: var(--vh100, 100vh);
@@ -180,8 +180,8 @@ h1 {
 	display: grid;
 	-ms-grid-columns: auto 1fr 50px;
 	grid-template-columns: auto 1fr 50px;
-	-ms-grid-rows: 47px 1fr;
-	grid-template-rows: 47px 1fr;
+	-ms-grid-rows: 47px calc(var(--vh100, 100vh) - 47px);
+	grid-template-rows: 47px calc(var(--vh100, 100vh) - 47px);
 }
 
 .wrapper > *:nth-child(1) {
@@ -289,11 +289,15 @@ h1 {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	-webkit-transition: all 0.15s linear 0s;
+	transition: all 0.15s linear 0s;
 }
 .wrapper .aside1__button svg {
 	fill: #333;
 	height: 18px;
 	margin: 1px 4px 0 0;
+	-webkit-transition: all 0.15s linear 0s;
+	transition: all 0.15s linear 0s;
 }
 .wrapper .aside1__button:hover {
 	background-color: #333;
@@ -356,18 +360,28 @@ h1 {
 }
 .wrapper .main textarea::-webkit-input-placeholder {
 	color: #757575;
+	-webkit-transition: all 0.15s linear 0s;
+	transition: all 0.15s linear 0s;
 }
 .wrapper .main textarea::-moz-placeholder {
 	color: #757575;
+	-moz-transition: all 0.15s linear 0s;
+	transition: all 0.15s linear 0s;
 }
 .wrapper .main textarea:-ms-input-placeholder {
 	color: #757575;
+	-ms-transition: all 0.15s linear 0s;
+	transition: all 0.15s linear 0s;
 }
 .wrapper .main textarea::-ms-input-placeholder {
 	color: #757575;
+	-ms-transition: all 0.15s linear 0s;
+	transition: all 0.15s linear 0s;
 }
 .wrapper .main textarea::placeholder {
 	color: #757575;
+	-webkit-transition: all 0.15s linear 0s;
+	transition: all 0.15s linear 0s;
 }
 .wrapper .main ._error textarea::-webkit-input-placeholder {
 	color: #ff0000;
@@ -400,16 +414,67 @@ h1 {
 	border-radius: 10px;
 	background-color: #FFFFFF;
 	border: 2px solid #FFFFFF;
+	-webkit-transition: all 0.15s linear 0s;
+	transition: all 0.15s linear 0s;
 }
 .wrapper .aside2__button svg {
 	fill: #333;
 	height: 26px;
 	margin: 2px 0 0 0;
+	-webkit-transition: all 0.15s linear 0s;
+	transition: all 0.15s linear 0s;
 }
 .wrapper .aside2__button:hover {
 	background-color: #333;
 }
 .wrapper .aside2__button:hover svg {
+	fill: #FFFFFF;
+}
+.wrapper .aside2 #button__text-align {
+	z-index: 1;
+	position: relative;
+}
+.wrapper .aside2 [id*=__text-align] svg {
+	height: 21px;
+	margin: 6px 0 0 0;
+}
+.wrapper .aside2__buttons {
+	display: -ms-grid;
+	display: grid;
+	gap: 3px;
+	justify-items: center;
+	width: 35px;
+	background-color: rgba(255, 255, 255, 0.2);
+	border-radius: 10px;
+	overflow: hidden;
+	visibility: hidden;
+	opacity: 0;
+	height: 0px;
+	border: 2px solid #ffffff;
+	margin: -23px 0 19px 0;
+	-webkit-transition: all 0.3s linear;
+	transition: all 0.3s linear;
+}
+.wrapper .aside2__buttons .aside2__button {
+	height: 26px;
+	width: 26px;
+	border: 1.6px solid #ffffff;
+}
+.wrapper .aside2__buttons .aside2__button svg {
+	height: 15px;
+	margin: 5px 0 0 0;
+}
+.wrapper .aside2 ._open {
+	visibility: visible;
+	opacity: 1;
+	height: 145px;
+	padding: 25px 0 3px 0;
+	margin: -23px 0 0 0;
+}
+.wrapper .aside2 ._active {
+	background-color: #333;
+}
+.wrapper .aside2 ._active svg {
 	fill: #FFFFFF;
 }
 .wrapper .aside2 ._error {

@@ -1,1 +1,1 @@
-# notes
+# [Notes](https://ast-astik.github.io/notes/)

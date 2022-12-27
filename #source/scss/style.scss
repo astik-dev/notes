@@ -31,7 +31,7 @@ h1 {
 
 // =============== pop-up ===============
 .pop-up{
-	z-index: 1;	
+	z-index: 100;	
 	position: absolute;
 	width: 100vw;
 	height: var(--vh100, 100vh);
@@ -94,8 +94,6 @@ h1 {
 		border: 2px solid rgba(255, 255, 255, 0.9);
 
 		&:hover {
-			//background-color: rgba(51, 51, 51, 0.9);
-			//color: rgba(255, 255, 255, 0.9);
 			background-color: rgba(240, 240, 240, 0.9);
 			color: rgba(51, 51, 51, 0.9);
 			border: 2px solid rgba(240, 240, 240, 0.9);
@@ -109,7 +107,7 @@ h1 {
 	margin: 0 auto;
 	display: grid;
 	grid-template-columns: auto 1fr 50px;
-	grid-template-rows: 47px 1fr;
+	grid-template-rows: 47px calc(var(--vh100, 100vh) - 47px);
 
 	// =============== header ===============
 	.header {
@@ -188,10 +186,14 @@ h1 {
 			overflow: hidden;
 			display: flex;
 
+			transition: all 0.15s linear 0s;
+
 			svg {
 				fill: #333;
 				height: 18px;
 				margin: 1px 4px 0 0;
+
+				transition: all 0.15s linear 0s;
 			}
 
 			&:hover {
@@ -260,9 +262,10 @@ h1 {
 				scrollbar-color: white #333; 
 			}
 		}
-		
+
 		textarea::placeholder {
 			color: #757575;
+			transition: all 0.15s linear 0s;
 		}
 		._error {
 			textarea::placeholder {
@@ -289,10 +292,14 @@ h1 {
 			background-color: #FFFFFF;
 			border: 2px solid #FFFFFF;
 
+			transition: all 0.15s linear 0s;
+
 			svg {
 				fill: #333;
 				height: 26px;
 				margin: 2px 0 0 0;
+
+				transition: all 0.15s linear 0s;
 			}
 
 			&:hover {
@@ -301,6 +308,61 @@ h1 {
 				svg {
 					fill: #FFFFFF;
 				}
+			}
+		}
+		#button__text-align {
+			z-index: 1;
+			position: relative;		
+		}
+		[id*=__text-align] {
+			svg {
+				height: 21px;
+				margin: 6px 0 0 0;
+			}
+		}
+		&__buttons {
+			display: grid;
+			gap: 3px;
+			justify-items: center;
+
+			width: 35px;
+			background-color: rgba(255, 255, 255, 0.2);
+			border-radius: 10px;
+
+			overflow: hidden;
+
+			visibility: hidden;
+			opacity: 0;	
+			height: 0px;
+			border: 2px solid  #ffffff;
+			margin: -23px 0 19px 0;
+
+			transition: all 0.3s linear;
+
+			.aside2__button {
+				height: 26px;
+				width: 26px;
+				border: 1.6px solid #ffffff;
+				svg {
+					height: 15px;
+					margin: 5px 0 0 0;
+				}
+			}
+		}
+		._open {
+			visibility: visible;
+			opacity: 1;	
+			height: 145px;
+
+			padding: 25px 0 3px 0;
+			margin: -23px 0 0 0;
+		}
+
+		._active {
+			background-color: #333;
+
+			svg {
+				fill: #FFFFFF;
 			}
 		}
 		._error {

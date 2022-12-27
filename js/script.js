@@ -4,8 +4,12 @@ const noteBody = document.querySelector(".note");
 const aside1AllNotes = document.querySelector(".aside1__all-notes");
 const aside2Menu = document.querySelector(".aside2__menu");
 const bodyHTML = document.querySelector("body");
+const textAlignMenu = aside2Menu.querySelector("#buttons-group__text-align");
+const textAlignButton = aside2Menu.querySelector("#button__text-align");
 
 let currentNoteId;
+let currentAlign = {text: "left", title: "left",};
+let currentFocusTextarea = "text";
 
 
 if (localStorage.getItem("notes") == null) {
@@ -80,7 +84,7 @@ function saveOldNote(idButton, errorClass) {
 		let title = String(noteTitle.value);
 		let text = String(noteText.value);
 
-		note[currentNoteId] = {title: title, text: text,};
+		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign},};
 		localStorage.setItem("notes", JSON.stringify(note));
 		refreshSavedNotes();
 	}
@@ -104,7 +108,7 @@ function saveNewNote (idButton, errorClass) {
 			aside1AllNotes.innerHTML = "";
 		}
 
-		note.push({title: title, text: text,});
+		note.push({title: title, text: text, settings: {align: currentAlign},});
 		localStorage.setItem("notes", JSON.stringify(note));
 		
 		aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
@@ -172,6 +176,10 @@ function addNewNote() {
 		noteTitle.value = "";
 		noteText.value = "";
 		currentNoteId = undefined;
+		currentAlign = {text: "left", title: "left",};
+		setCurrentAlign("title");
+		setCurrentAlign("text");
+		refreshActiveButtonInAlignMenu();
 		setNoteTitleHeight();
 		markCurrentNote();
 		noteText.focus();
@@ -183,18 +191,13 @@ function addNewNote() {
 function aside2MenuButtons(event) {
 	let buttonId;
 
-	if (event.target.id.includes("button__")) {
-		buttonId = event.target.id;
-	} else if (event.target.parentNode.id.includes("button__")) {
-		buttonId = event.target.parentNode.id;
-	} else if (event.target.parentNode.parentNode.id.includes("button__")) {
-		buttonId = event.target.parentNode.parentNode.id;
-	}
+	buttonId = findIdWithSVG(event.target, "button__");
 
 	if (buttonId != undefined) {
 		if (buttonId == "button__save") {saveNewNoteOrSaveOldNote();}
 		else if (buttonId == "button__new-file") {addNewNote();}
 		else if (buttonId == "button__trash") {popUp("Delete note", "This note will be permanently deleted", {text: "Cancel", function(){errorButton ("button__trash", "_error", true)}}, {text: "Delete", function(){deleteNote(); errorButton("button__trash", "_successful", true)}}, function(){errorButton ("button__trash", "_error", true);});}
+		else if (buttonId == "button__text-align") {openAndCloseAlignMenu();}
 	}
 }
 
@@ -214,19 +217,17 @@ function cutTitle (title, maxLength, endSymbol) {
 function importNoteIntoEditor (event) {
 	let noteId;
 
-	if (event.target.id.includes("note_")) {
-		noteId = event.target.id;
-	} else if (event.target.parentNode.id.includes("note_")) {
-		noteId = event.target.parentNode.id;
-	} else if (event.target.parentNode.parentNode.id.includes("note_")) {
-		noteId = event.target.parentNode.parentNode.id;
-	}
+	noteId = findIdWithSVG(event.target, "note_");
 
 	if (noteId != undefined) {
 		let notePositionInArray = Number(noteId.substr(5));
 		currentNoteId = notePositionInArray;
 		noteTitle.value = note[notePositionInArray].title;
 		noteText.value = note[notePositionInArray].text;
+		currentAlign = note[notePositionInArray].settings.align;
+		setCurrentAlign("title");
+		setCurrentAlign("text");
+		refreshActiveButtonInAlignMenu();
 		setNoteTitleHeight();
 		markCurrentNote();
 	}
@@ -242,12 +243,20 @@ function deleteNote() {
 		noteTitle.value = "";
 		noteText.value = "";
 		currentNoteId = undefined;
+		currentAlign = {text: "left", title: "left",};
+		setCurrentAlign("title");
+		setCurrentAlign("text");
+		refreshActiveButtonInAlignMenu();
 		setNoteTitleHeight();
 		refreshSavedNotes();
 	} else {
 		noteTitle.value = "";
 		noteText.value = "";
 		currentNoteId = undefined;
+		currentAlign = {text: "left", title: "left",};
+		setCurrentAlign("title");
+		setCurrentAlign("text");
+		refreshActiveButtonInAlignMenu();
 		setNoteTitleHeight();
 	}
 }
@@ -332,6 +341,96 @@ function setVH() {
 
 
 
+function openAndCloseAlignMenu() {
+	textAlignMenu.classList.toggle("_open");
+	textAlignButton.classList.toggle("_active");
+
+	refreshActiveButtonInAlignMenu();
+
+	textAlignMenu.addEventListener("click", function (event) {
+		let clickedButton = findIdWithSVG(event.target, "button__text-align");
+		
+		if (clickedButton != undefined) {
+			clickedButton = clickedButton.slice(19);
+
+			currentAlign[currentFocusTextarea] = clickedButton;
+
+			refreshActiveButtonInAlignMenu();	
+			closeTextAlignMenu()	
+		}
+	});
+}
+
+
+
+function refreshActiveButtonInAlignMenu() {
+	const oldActiveButton = textAlignMenu.querySelector("._active");
+	if (oldActiveButton != undefined) {
+		oldActiveButton.classList.remove("_active");
+	}
+
+	activeButtonId = setCurrentAlign(currentFocusTextarea);
+	const activeButton = aside2Menu.querySelector(activeButtonId);
+	activeButton.classList.add("_active");
+}
+
+
+
+function setCurrentAlign(value) {
+
+	let element;
+
+	if (value == "title") {
+		element = noteTitle;
+	} else if (value == "text") {
+		element = noteText;
+	} else {
+		return;
+	}
+
+	if (currentAlign[value] == "left") {
+			element.style.textAlign = "left";
+			textAlignButton.innerHTML = `<svg viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><path d="M0 0v1h8v-1h-8zm0 2v1h6v-1h-6zm0 2v1h8v-1h-8zm0 2v1h6v-1h-6z" /></svg>`;
+			return "#button__text-align-left";
+		} else if (currentAlign[value] == "center") {
+			element.style.textAlign = "center";
+			textAlignButton.innerHTML = `<svg viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><path d="M0 0v1h8v-1h-8zm1 2v1h6v-1h-6zm-1 2v1h8v-1h-8zm1 2v1h6v-1h-6z" /></svg>`;
+			return "#button__text-align-center";
+		} else if (currentAlign[value] == "right") {
+			element.style.textAlign = "right";
+			textAlignButton.innerHTML = `<svg viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><path d="M0 0v1h8v-1h-8zm2 2v1h6v-1h-6zm-2 2v1h8v-1h-8zm2 2v1h6v-1h-6z" /></svg>`;
+			return "#button__text-align-right";
+		} else if (currentAlign[value] == "justify") {
+			element.style.textAlign = "justify";
+			textAlignButton.innerHTML = `<svg viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg"><path d="M0 0v1h8v-1h-8zm0 2v1h8v-1h-6zm-0 2v1h8v-1h-8zm0 2v1h8v-1h-6z" /></svg>`;
+			return "#button__text-align-justify";
+		} else {
+			currentAlign[value] = "left";
+			element.style.textAlign = "left";
+			return "#button__text-align-left";
+		}
+}
+
+
+
+function closeTextAlignMenu() {
+	textAlignMenu.classList.remove("_open");
+	textAlignButton.classList.remove("_active");
+}
+
+
+
+function findIdWithSVG(element, includesText) {
+	if (element.id.includes(includesText)) {
+		return element.id;
+	} else if (element.parentNode.id.includes(includesText)) {
+		return element.parentNode.id;
+	} else if (element.parentNode.parentNode.id.includes(includesText)) {
+		return element.parentNode.parentNode.id;
+	}
+}
+
+
 
 
 
@@ -340,12 +439,18 @@ showSavedNotes();
 setVH();
 
 noteTitle.addEventListener('input', setNoteTitleHeight);
+
 aside2Menu.addEventListener("click", aside2MenuButtons);
+
 aside1AllNotes.addEventListener("click", importNoteIntoEditor);
+
 window.addEventListener('resize', setVH);
 
-
-
-
-
-
+noteTitle.addEventListener("focus", function (event) {
+	currentFocusTextarea = "title";
+	refreshActiveButtonInAlignMenu();
+});
+noteText.addEventListener("focus", function (event) {
+	currentFocusTextarea = "text";
+	refreshActiveButtonInAlignMenu();
+});
