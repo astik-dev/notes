@@ -13,13 +13,14 @@
     opacity: 1;
 }
 
+
+
 body {
 	background-color: #333;
 	font-family: 'IBM Plex Mono', monospace;
 	color: #FFFFFF;
 
 	overflow: hidden;
-	
 	scrollbar-width: thin;
  	scrollbar-color: white #333;
 }
@@ -117,7 +118,8 @@ h1 {
 		&__title {	
 			padding: 8px 0 8px 0px;
 			width: 200px;
-			text-align: center;		
+			text-align: center;
+			display: inline-block;		
 
 			h1 {
 				display: inline-block;
@@ -133,6 +135,12 @@ h1 {
 				top: 3px;
 				left: -25px;
 			}
+		}
+		&__delete-all {
+			display: inline-block;
+			button {
+				display: inline-block;
+			}	
 		}
 	}
 
@@ -205,13 +213,8 @@ h1 {
 				}
 			}
 		}
-		._active {
-			background-color: #333;
-			color: #FFFFFF;
-			svg {
-				fill: #fff;
-			}
-		}
+		
+		._active {}
 		._error {
 			background-color: #ff0000;
 			color: #FFFFFF;
@@ -253,7 +256,7 @@ h1 {
 			}
 			&__textarea {
 				min-width: 1px;
-				padding: 8px 1px 0 1px;
+				padding: 8px 3px 0 1px;
 				margin: 0 0 25px 0;
 				font-size: 16px;
 				line-height: 22px;
@@ -279,10 +282,15 @@ h1 {
 		border-right: 1px solid #FFFFFF;
 
 		&__menu {
-			padding: 7.5px 0 0 0;
+			padding: 7.5px 0 7.5px 0;
 			display: grid;
 			gap: 7.5px;
 			justify-items: center;
+			max-height: calc(var(--vh100, 100vh) - 47px);
+			overflow-y: auto;
+
+			scrollbar-width: thin;
+			scrollbar-color: white #333;
 		}
 
 		&__button {
@@ -302,15 +310,31 @@ h1 {
 				transition: all 0.15s linear 0s;
 			}
 
+			div {
+				background-color: #FFFFFF;
+				height: 23px;
+				width: 23px;
+				border: 1px solid #333;
+				border-radius: 5px;	
+				margin: 0 0 0 4px;
+
+				transition: all 0.15s linear 0s;
+			}
+
 			&:hover {
 				background-color: #333;
 
 				svg {
 					fill: #FFFFFF;
 				}
+
+				div {
+					border: 1px solid #FFFFFF;
+				}
 			}
 		}
-		#button__text-align {
+		#button__text-align,
+		#button__color {
 			z-index: 1;
 			position: relative;		
 		}
@@ -320,7 +344,8 @@ h1 {
 				margin: 6px 0 0 0;
 			}
 		}
-		&__buttons {
+		&__buttons-text-align,
+		&__buttons-color {
 			display: grid;
 			gap: 3px;
 			justify-items: center;
@@ -336,9 +361,7 @@ h1 {
 			height: 0px;
 			border: 2px solid  #ffffff;
 			margin: -23px 0 19px 0;
-
-			transition: all 0.3s linear;
-
+			
 			.aside2__button {
 				height: 26px;
 				width: 26px;
@@ -347,9 +370,20 @@ h1 {
 					height: 15px;
 					margin: 5px 0 0 0;
 				}
+				div {
+					height: 15px;
+					width: 15px;
+				}
 			}
 		}
-		._open {
+		&__buttons-text-align {
+			transition: all 0.3s linear;
+		}
+		&__buttons-color {
+			transition: all 0.4s linear;
+		}
+
+		._open-text-align {
 			visibility: visible;
 			opacity: 1;	
 			height: 145px;
@@ -357,12 +391,69 @@ h1 {
 			padding: 25px 0 3px 0;
 			margin: -23px 0 0 0;
 		}
+		._open-color {
+			visibility: visible;
+			opacity: 1;	
+			height: 290px;
+
+			padding: 25px 0 3px 0;
+			margin: -23px 0 0 0;
+		}
+
+		#button__color-FFFFFF {
+			div {
+				background-color: #FFFFFF;
+			}	
+		}
+		#button__color-ffc800 {
+			div {
+				background-color: #ffc800;
+			}
+		}
+		#button__color-fc8128 {
+			div {
+				background-color: #fc8128;
+			}
+		}
+		#button__color-ff6e9a {
+			div {
+				background-color: #ff6e9a;
+			}
+		}
+		#button__color-50F40F {
+			div {
+				background-color: #50F40F;
+			}
+		}
+		#button__color-3fcc9c {
+			div {
+				background-color: #3fcc9c;
+			}
+		}
+		#button__color-3BDBE9 {
+			div {
+				background-color: #3BDBE9;
+			}
+		}
+		#button__color-3f94fc {
+			div {
+				background-color: #3f94fc;
+			}
+		}
+		#button__color-ff5e5e {
+			div {
+				background-color: #ff5e5e;
+			}
+		}
 
 		._active {
 			background-color: #333;
 
 			svg {
 				fill: #FFFFFF;
+			}
+			div {
+				border: 1px solid #FFFFFF;
 			}
 		}
 		._error {

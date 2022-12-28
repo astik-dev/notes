@@ -6,10 +6,15 @@ const aside2Menu = document.querySelector(".aside2__menu");
 const bodyHTML = document.querySelector("body");
 const textAlignMenu = aside2Menu.querySelector("#buttons-group__text-align");
 const textAlignButton = aside2Menu.querySelector("#button__text-align");
+const colorButton = aside2Menu.querySelector("#button__color");
+const colorMenu = aside2Menu.querySelector("#buttons-group__color");
 
+noteTitle.value = "";
+noteText.value = "";
 let currentNoteId;
 let currentAlign = {text: "left", title: "left",};
 let currentFocusTextarea = "text";
+let currentColor = "#FFFFFF";
 
 
 if (localStorage.getItem("notes") == null) {
@@ -70,6 +75,8 @@ function checkEmptyValue (idButton, errorClass) {
 
 
 function saveNewNoteOrSaveOldNote () {
+	closeTextAlignMenu();
+	closeColorMenu();
 	if (currentNoteId != undefined) {
 		saveOldNote("button__save", "_error");
 	} else {
@@ -84,7 +91,7 @@ function saveOldNote(idButton, errorClass) {
 		let title = String(noteTitle.value);
 		let text = String(noteText.value);
 
-		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign},};
+		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign, color: currentColor,},};
 		localStorage.setItem("notes", JSON.stringify(note));
 		refreshSavedNotes();
 	}
@@ -108,7 +115,7 @@ function saveNewNote (idButton, errorClass) {
 			aside1AllNotes.innerHTML = "";
 		}
 
-		note.push({title: title, text: text, settings: {align: currentAlign},});
+		note.push({title: title, text: text, settings: {align: currentAlign, color: currentColor,},});
 		localStorage.setItem("notes", JSON.stringify(note));
 		
 		aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
@@ -135,6 +142,7 @@ function showSavedNotes () {
 			aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
 																<button class="aside1__button" id="note_${i}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg>${minTitle}</button>
 		 													</li>`);
+			setColorStyles(i);
 		}
 	} else {
 		aside1AllNotes.innerHTML = "<span class='aside1__empty'>You don't have any notes yet.</span>";
@@ -152,6 +160,8 @@ function refreshSavedNotes () {
 
 
 function addNewNote() {
+	closeTextAlignMenu();
+	closeColorMenu();
 
 	let create;
 	let title = String(noteTitle.value);
@@ -182,6 +192,8 @@ function addNewNote() {
 		refreshActiveButtonInAlignMenu();
 		setNoteTitleHeight();
 		markCurrentNote();
+		currentColor = "#FFFFFF";
+		setColor("new");
 		noteText.focus();
 	}
 }
@@ -198,6 +210,7 @@ function aside2MenuButtons(event) {
 		else if (buttonId == "button__new-file") {addNewNote();}
 		else if (buttonId == "button__trash") {popUp("Delete note", "This note will be permanently deleted", {text: "Cancel", function(){errorButton ("button__trash", "_error", true)}}, {text: "Delete", function(){deleteNote(); errorButton("button__trash", "_successful", true)}}, function(){errorButton ("button__trash", "_error", true);});}
 		else if (buttonId == "button__text-align") {openAndCloseAlignMenu();}
+		else if (buttonId == "button__color") {openAndCloseColorMenu();}
 	}
 }
 
@@ -220,6 +233,8 @@ function importNoteIntoEditor (event) {
 	noteId = findIdWithSVG(event.target, "note_");
 
 	if (noteId != undefined) {
+		closeTextAlignMenu();
+		closeColorMenu();
 		let notePositionInArray = Number(noteId.substr(5));
 		currentNoteId = notePositionInArray;
 		noteTitle.value = note[notePositionInArray].title;
@@ -228,8 +243,10 @@ function importNoteIntoEditor (event) {
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
+		refreshActiveButtonInColorMenu();
 		setNoteTitleHeight();
 		markCurrentNote();
+		setColor("import");
 	}
 }
 
@@ -248,6 +265,8 @@ function deleteNote() {
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
 		setNoteTitleHeight();
+		currentColor = "#FFFFFF";
+		setColor("new");
 		refreshSavedNotes();
 	} else {
 		noteTitle.value = "";
@@ -258,6 +277,8 @@ function deleteNote() {
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
 		setNoteTitleHeight();
+		currentColor = "#FFFFFF";
+		setColor("new");
 	}
 }
 
@@ -270,14 +291,19 @@ function markCurrentNote() {
 
 		if (activeNote == null) {
 			currentNoteButton.classList.add("_active");
+			setColor("new");
 		} else {
 			activeNote.classList.remove("_active");
+			activeNote.style.cssText = '';
+			const svgIcon = activeNote.querySelector("svg");
+			svgIcon.style.fill = '';
 			currentNoteButton.classList.add("_active");
+			setColor("new");
 		}
 	} else {
 		let activeNote = aside1AllNotes.querySelector("._active");
 		if (activeNote != null) {
-			activeNote.classList.remove("_active");
+			refreshSavedNotes();
 		} 
 	}
 }
@@ -286,6 +312,9 @@ function markCurrentNote() {
 
 // popUp(title, text, {text: button1, function() {function()}, {text: button2, function() {function()}},);
 function popUp(title, text, button1Object, button2Object, popUpEmptyPlaceFunction) {
+	closeTextAlignMenu();
+	closeColorMenu();
+
 	const popUpAllElements = document.querySelector(".pop-up");
 	const popUpBody = document.querySelector(".pop-up__body");
 	const popUpTitle = document.querySelector(".pop-up__title");
@@ -342,7 +371,8 @@ function setVH() {
 
 
 function openAndCloseAlignMenu() {
-	textAlignMenu.classList.toggle("_open");
+	closeColorMenu();
+	textAlignMenu.classList.toggle("_open-text-align");
 	textAlignButton.classList.toggle("_active");
 
 	refreshActiveButtonInAlignMenu();
@@ -414,7 +444,7 @@ function setCurrentAlign(value) {
 
 
 function closeTextAlignMenu() {
-	textAlignMenu.classList.remove("_open");
+	textAlignMenu.classList.remove("_open-text-align");
 	textAlignButton.classList.remove("_active");
 }
 
@@ -429,6 +459,75 @@ function findIdWithSVG(element, includesText) {
 		return element.parentNode.parentNode.id;
 	}
 }
+
+
+// import || new
+function setColor(value) {
+	let color;
+	if (value == "import") {
+		color = note[currentNoteId].settings.color;
+		currentColor = color;
+	} else if (value == "new") {
+		color = currentColor;
+	}
+	const colorIcon = aside2Menu.querySelector(".aside2__color-icon");
+
+	noteTitle.style.color = color;
+	noteTitle.style.borderBottom = `1px solid ${color}`;
+	noteText.style.color = color;
+	colorIcon.style.backgroundColor = color;
+
+	const activeNoteColor = aside1AllNotes.querySelector("._active");
+	if (activeNoteColor != undefined) {
+		const svgIcon = activeNoteColor.querySelector("svg");
+		activeNoteColor.style.cssText = `color: ${color}; border: 1px solid ${color}; background-color: #333;`;
+		svgIcon.style.fill = color;
+	}
+}
+
+function setColorStyles(i) {
+	let iColor = note[i].settings.color;
+	const colorStyles = document.querySelector("#styles");
+	colorStyles.innerHTML += `#note_${i}{background-color: ${iColor}; border: 1px solid ${iColor}} #note_${i}:hover{background-color: #333; color: ${iColor};} #note_${i}:hover svg{fill: ${iColor}}\n`;
+}
+
+function openAndCloseColorMenu() {
+	closeTextAlignMenu();
+	colorMenu.classList.toggle("_open-color");
+	colorButton.classList.toggle("_active");
+
+	refreshActiveButtonInColorMenu();
+
+	colorMenu.addEventListener("click", function (event) {
+		let clickedButton = findIdWithSVG(event.target, "button__color-");
+		
+		if (clickedButton != undefined) {
+			clickedButton = clickedButton.slice(14);
+
+			currentColor = "#" + clickedButton;
+
+			refreshActiveButtonInColorMenu();
+			setColor("new");
+			refreshSavedNotes ();
+		}
+	});
+}
+
+function refreshActiveButtonInColorMenu() {
+	const oldActiveButton = colorMenu.querySelector("._active");
+	if (oldActiveButton != undefined) {
+		oldActiveButton.classList.remove("_active");
+	}
+	
+	const activeButton = colorMenu.querySelector(`#button__color-${currentColor.slice(1)}`);
+	activeButton.classList.add("_active");
+}
+
+function closeColorMenu() {
+	colorMenu.classList.remove("_open-color");
+	colorButton.classList.remove("_active");
+}
+
 
 
 

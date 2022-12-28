@@ -224,6 +224,7 @@ h1 {
 	padding: 8px 0 8px 0px;
 	width: 200px;
 	text-align: center;
+	display: inline-block;
 }
 .wrapper .header__title h1 {
 	display: inline-block;
@@ -238,6 +239,12 @@ h1 {
 	position: absolute;
 	top: 3px;
 	left: -25px;
+}
+.wrapper .header__delete-all {
+	display: inline-block;
+}
+.wrapper .header__delete-all button {
+	display: inline-block;
 }
 .wrapper .aside1 {
 	border-left: 1px solid #FFFFFF;
@@ -306,13 +313,6 @@ h1 {
 .wrapper .aside1__button:hover svg {
 	fill: #fff;
 }
-.wrapper .aside1 ._active {
-	background-color: #333;
-	color: #FFFFFF;
-}
-.wrapper .aside1 ._active svg {
-	fill: #fff;
-}
 .wrapper .aside1 ._error {
 	background-color: #ff0000;
 	color: #FFFFFF;
@@ -350,7 +350,7 @@ h1 {
 }
 .wrapper .main .note__textarea {
 	min-width: 1px;
-	padding: 8px 1px 0 1px;
+	padding: 8px 3px 0 1px;
 	margin: 0 0 25px 0;
 	font-size: 16px;
 	line-height: 22px;
@@ -402,11 +402,15 @@ h1 {
 	border-right: 1px solid #FFFFFF;
 }
 .wrapper .aside2__menu {
-	padding: 7.5px 0 0 0;
+	padding: 7.5px 0 7.5px 0;
 	display: -ms-grid;
 	display: grid;
 	gap: 7.5px;
 	justify-items: center;
+	max-height: calc(var(--vh100, 100vh) - 47px);
+	overflow-y: auto;
+	scrollbar-width: thin;
+	scrollbar-color: white #333;
 }
 .wrapper .aside2__button {
 	height: 35px;
@@ -424,13 +428,27 @@ h1 {
 	-webkit-transition: all 0.15s linear 0s;
 	transition: all 0.15s linear 0s;
 }
+.wrapper .aside2__button div {
+	background-color: #FFFFFF;
+	height: 23px;
+	width: 23px;
+	border: 1px solid #333;
+	border-radius: 5px;
+	margin: 0 0 0 4px;
+	-webkit-transition: all 0.15s linear 0s;
+	transition: all 0.15s linear 0s;
+}
 .wrapper .aside2__button:hover {
 	background-color: #333;
 }
 .wrapper .aside2__button:hover svg {
 	fill: #FFFFFF;
 }
-.wrapper .aside2 #button__text-align {
+.wrapper .aside2__button:hover div {
+	border: 1px solid #FFFFFF;
+}
+.wrapper .aside2 #button__text-align,
+.wrapper .aside2 #button__color {
 	z-index: 1;
 	position: relative;
 }
@@ -438,7 +456,7 @@ h1 {
 	height: 21px;
 	margin: 6px 0 0 0;
 }
-.wrapper .aside2__buttons {
+.wrapper .aside2__buttons-text-align, .wrapper .aside2__buttons-color {
 	display: -ms-grid;
 	display: grid;
 	gap: 3px;
@@ -452,30 +470,77 @@ h1 {
 	height: 0px;
 	border: 2px solid #ffffff;
 	margin: -23px 0 19px 0;
-	-webkit-transition: all 0.3s linear;
-	transition: all 0.3s linear;
 }
-.wrapper .aside2__buttons .aside2__button {
+.wrapper .aside2__buttons-text-align .aside2__button, .wrapper .aside2__buttons-color .aside2__button {
 	height: 26px;
 	width: 26px;
 	border: 1.6px solid #ffffff;
 }
-.wrapper .aside2__buttons .aside2__button svg {
+.wrapper .aside2__buttons-text-align .aside2__button svg, .wrapper .aside2__buttons-color .aside2__button svg {
 	height: 15px;
 	margin: 5px 0 0 0;
 }
-.wrapper .aside2 ._open {
+.wrapper .aside2__buttons-text-align .aside2__button div, .wrapper .aside2__buttons-color .aside2__button div {
+	height: 15px;
+	width: 15px;
+}
+.wrapper .aside2__buttons-text-align {
+	-webkit-transition: all 0.3s linear;
+	transition: all 0.3s linear;
+}
+.wrapper .aside2__buttons-color {
+	-webkit-transition: all 0.4s linear;
+	transition: all 0.4s linear;
+}
+.wrapper .aside2 ._open-text-align {
 	visibility: visible;
 	opacity: 1;
 	height: 145px;
 	padding: 25px 0 3px 0;
 	margin: -23px 0 0 0;
 }
+.wrapper .aside2 ._open-color {
+	visibility: visible;
+	opacity: 1;
+	height: 290px;
+	padding: 25px 0 3px 0;
+	margin: -23px 0 0 0;
+}
+.wrapper .aside2 #button__color-FFFFFF div {
+	background-color: #FFFFFF;
+}
+.wrapper .aside2 #button__color-ffc800 div {
+	background-color: #ffc800;
+}
+.wrapper .aside2 #button__color-fc8128 div {
+	background-color: #fc8128;
+}
+.wrapper .aside2 #button__color-ff6e9a div {
+	background-color: #ff6e9a;
+}
+.wrapper .aside2 #button__color-50F40F div {
+	background-color: #50F40F;
+}
+.wrapper .aside2 #button__color-3fcc9c div {
+	background-color: #3fcc9c;
+}
+.wrapper .aside2 #button__color-3BDBE9 div {
+	background-color: #3BDBE9;
+}
+.wrapper .aside2 #button__color-3f94fc div {
+	background-color: #3f94fc;
+}
+.wrapper .aside2 #button__color-ff5e5e div {
+	background-color: #ff5e5e;
+}
 .wrapper .aside2 ._active {
 	background-color: #333;
 }
 .wrapper .aside2 ._active svg {
 	fill: #FFFFFF;
+}
+.wrapper .aside2 ._active div {
+	border: 1px solid #FFFFFF;
 }
 .wrapper .aside2 ._error {
 	background-color: #ff0000;
