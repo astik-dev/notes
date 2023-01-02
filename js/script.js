@@ -8,6 +8,9 @@ const textAlignMenu = aside2Menu.querySelector("#buttons-group__text-align");
 const textAlignButton = aside2Menu.querySelector("#button__text-align");
 const colorButton = aside2Menu.querySelector("#button__color");
 const colorMenu = aside2Menu.querySelector("#buttons-group__color");
+const styles = document.querySelector("#styles");
+const burgerAllNotesButton = document.querySelector(".header__burger-all-notes-button");
+const aside1 = document.querySelector(".aside1");
 
 noteTitle.value = "";
 noteText.value = "";
@@ -15,6 +18,8 @@ let currentNoteId;
 let currentAlign = {text: "left", title: "left",};
 let currentFocusTextarea = "text";
 let currentColor = "#FFFFFF";
+let initialPoint;
+let finalPoint;
 
 
 if (localStorage.getItem("notes") == null) {
@@ -22,13 +27,6 @@ if (localStorage.getItem("notes") == null) {
 }
 let note = localStorage.getItem("notes");
 note = JSON.parse(note);
-
-
-
-function setNoteTitleHeight() {
-	noteTitle.style.height = "37px";
-  	noteTitle.style.height = (noteTitle.scrollHeight) + 1 + 'px';
-}
 
 
 
@@ -119,10 +117,11 @@ function saveNewNote (idButton, errorClass) {
 		localStorage.setItem("notes", JSON.stringify(note));
 		
 		aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
-															<button class="aside1__button"  id="note_${note.length-1}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg>${minTitle}</button>
+			<button class="aside1__button"  id="note_${note.length-1}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span>${minTitle}</span></button>
 	 													</li>`);
 		currentNoteId = note.length-1;
 
+		setColorStyles(currentNoteId);
 		markCurrentNote();
 	}
 }
@@ -140,7 +139,7 @@ function showSavedNotes () {
 				minTitle = cutTitle(note[i].title, 18, "..");
 			}
 			aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
-																<button class="aside1__button" id="note_${i}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg>${minTitle}</button>
+				<button class="aside1__button" id="note_${i}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span>${minTitle}</span></button>
 		 													</li>`);
 			setColorStyles(i);
 		}
@@ -153,6 +152,7 @@ function showSavedNotes () {
 
 function refreshSavedNotes () {
 	aside1AllNotes.innerHTML = "";
+	styles.innerHTML = "";
 	showSavedNotes();
 	markCurrentNote();
 }
@@ -190,7 +190,7 @@ function addNewNote() {
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
-		setNoteTitleHeight();
+		titleHeightLimit("off");
 		markCurrentNote();
 		currentColor = "#FFFFFF";
 		setColor("new");
@@ -244,9 +244,10 @@ function importNoteIntoEditor (event) {
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInColorMenu();
-		setNoteTitleHeight();
+		titleHeightLimit("on");
 		markCurrentNote();
 		setColor("import");
+		titleHeightLimit("on");
 	}
 }
 
@@ -264,7 +265,7 @@ function deleteNote() {
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
-		setNoteTitleHeight();
+		titleHeightLimit("off");
 		currentColor = "#FFFFFF";
 		setColor("new");
 		refreshSavedNotes();
@@ -276,7 +277,7 @@ function deleteNote() {
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
-		setNoteTitleHeight();
+		titleHeightLimit("off");
 		currentColor = "#FFFFFF";
 		setColor("new");
 	}
@@ -461,6 +462,7 @@ function findIdWithSVG(element, includesText) {
 }
 
 
+
 // import || new
 function setColor(value) {
 	let color;
@@ -473,7 +475,7 @@ function setColor(value) {
 	const colorIcon = aside2Menu.querySelector(".aside2__color-icon");
 
 	noteTitle.style.color = color;
-	noteTitle.style.borderBottom = `1px solid ${color}`;
+	noteBody.querySelector(".note__line").style.backgroundColor = color;
 	noteText.style.color = color;
 	colorIcon.style.backgroundColor = color;
 
@@ -485,11 +487,14 @@ function setColor(value) {
 	}
 }
 
+
+
 function setColorStyles(i) {
 	let iColor = note[i].settings.color;
-	const colorStyles = document.querySelector("#styles");
-	colorStyles.innerHTML += `#note_${i}{background-color: ${iColor}; border: 1px solid ${iColor}} #note_${i}:hover{background-color: #333; color: ${iColor};} #note_${i}:hover svg{fill: ${iColor}}\n`;
+	styles.innerHTML += `#note_${i}{background-color: ${iColor}; border: 1px solid ${iColor}} #note_${i}:hover{background-color: #333; color: ${iColor};} #note_${i}:hover svg{fill: ${iColor}}\n`;
 }
+
+
 
 function openAndCloseColorMenu() {
 	closeTextAlignMenu();
@@ -513,6 +518,8 @@ function openAndCloseColorMenu() {
 	});
 }
 
+
+
 function refreshActiveButtonInColorMenu() {
 	const oldActiveButton = colorMenu.querySelector("._active");
 	if (oldActiveButton != undefined) {
@@ -523,9 +530,66 @@ function refreshActiveButtonInColorMenu() {
 	activeButton.classList.add("_active");
 }
 
+
+
 function closeColorMenu() {
 	colorMenu.classList.remove("_open-color");
 	colorButton.classList.remove("_active");
+}
+
+
+
+function openClassForAside1(addRemoveToggle) {
+	if (addRemoveToggle == "add") {
+		aside1AllNotes.classList.add("_open767");
+		aside1.classList.add("_open575");
+		burgerAllNotesButton.classList.add("_open-burger");
+	} else if (addRemoveToggle == "remove") {
+		aside1AllNotes.classList.remove("_open767");
+		aside1.classList.remove("_open575");
+		burgerAllNotesButton.classList.remove("_open-burger");
+	} else if (addRemoveToggle == "toggle") {
+		aside1AllNotes.classList.toggle("_open767");
+		aside1.classList.toggle("_open575");
+		burgerAllNotesButton.classList.toggle("_open-burger");
+	}
+}
+
+
+
+// on or off
+function titleHeightLimit(onOff) {
+	const currentMainHeight = document.querySelector(".main").clientHeight;
+	let availableTitleHeight;
+
+	if (document.documentElement.clientWidth <= 767) {
+						  // = currentMainHeight - title.margin - line.margin - textarea.margin - (textarea.lineheight * 2)
+		availableTitleHeight = currentMainHeight - 15 - 10 - (8 + 15) - (22 * 2);
+	} else {
+		availableTitleHeight = currentMainHeight - 25 - 10 - (8 + 25) - (22 * 2);
+	}
+
+	function setFullTitleHeight() {
+		noteTitle.style.height = "26px";
+		let fullTitleHeight = noteTitle.scrollHeight;
+
+	  	if (fullTitleHeight > availableTitleHeight) {
+	  		noteTitle.style.height = availableTitleHeight + "px";
+	  	} else {
+	  		noteTitle.style.height = fullTitleHeight + "px";
+	  	}
+	}
+
+	setFullTitleHeight();
+	if (onOff == "on") {
+		let amountOfString = (noteTitle.scrollHeight) / 26;
+		console.log(amountOfString);
+		if (amountOfString > 3) {
+			let newHeight = 3 * 26;
+			noteTitle.style.height = newHeight + 'px';
+			noteTitle.scrollTop = 0;
+		}
+	}
 }
 
 
@@ -537,7 +601,12 @@ function closeColorMenu() {
 showSavedNotes();
 setVH();
 
-noteTitle.addEventListener('input', setNoteTitleHeight);
+noteTitle.addEventListener('input', function (event) {
+	titleHeightLimit("off");
+});
+noteTitle.addEventListener('click', function (event) {
+	titleHeightLimit("off");
+});
 
 aside2Menu.addEventListener("click", aside2MenuButtons);
 
@@ -548,8 +617,21 @@ window.addEventListener('resize', setVH);
 noteTitle.addEventListener("focus", function (event) {
 	currentFocusTextarea = "title";
 	refreshActiveButtonInAlignMenu();
+	closeColorMenu();
 });
 noteText.addEventListener("focus", function (event) {
 	currentFocusTextarea = "text";
 	refreshActiveButtonInAlignMenu();
+	closeColorMenu();
+	titleHeightLimit("on");
+});
+
+burgerAllNotesButton.addEventListener("click", function(event){
+	openClassForAside1("toggle");
+});
+
+window.addEventListener("click", function (event) {
+	if (!event.target.closest(".aside1") && !event.target.closest(".header__burger-all-notes-button")) {
+		openClassForAside1("remove");
+	}
 });
