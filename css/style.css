@@ -152,11 +152,6 @@ h1 {
 	background-color: rgba(51, 51, 51, 0.9);
 	color: rgba(255, 255, 255, 0.9);
 }
-.pop-up__buttons button:nth-child(1):hover {
-	margin: 0 6px 0 0;
-	background-color: rgba(70, 70, 70, 0.9);
-	color: rgba(255, 255, 255, 0.9);
-}
 .pop-up__button {
 	font-size: 14px;
 	display: inline-block;
@@ -166,11 +161,6 @@ h1 {
 	padding: 1px 5px;
 	font-weight: 700;
 	border: 2px solid rgba(255, 255, 255, 0.9);
-}
-.pop-up__button:hover {
-	background-color: rgba(240, 240, 240, 0.9);
-	color: rgba(51, 51, 51, 0.9);
-	border: 2px solid rgba(240, 240, 240, 0.9);
 }
 
 .wrapper {
@@ -352,20 +342,6 @@ h1 {
 	-webkit-transition: all 0.15s linear 0s;
 	transition: all 0.15s linear 0s;
 }
-.wrapper .aside1__button:hover {
-	background-color: #333;
-	color: #FFFFFF;
-}
-.wrapper .aside1__button:hover svg {
-	fill: #fff;
-}
-.wrapper .aside1 ._error {
-	background-color: #ff0000;
-	color: #FFFFFF;
-}
-.wrapper .aside1 ._error svg {
-	fill: #FFFFFF;
-}
 .wrapper .main {
 	border-left: 1px solid #FFFFFF;
 	border-right: 1px solid #FFFFFF;
@@ -490,17 +466,14 @@ h1 {
 	-webkit-transition: all 0.15s linear 0s;
 	transition: all 0.15s linear 0s;
 }
-.wrapper .aside2__button:hover {
-	background-color: #333;
-}
-.wrapper .aside2__button:hover svg {
-	fill: #FFFFFF;
-}
-.wrapper .aside2__button:hover div {
-	border: 1px solid #FFFFFF;
+.wrapper .aside2__button span {
+	font-size: 16px;
+	color: #333;
+	font-weight: 500;
 }
 .wrapper .aside2 #button__text-align,
-.wrapper .aside2 #button__color {
+.wrapper .aside2 #button__color,
+.wrapper .aside2 #button__font-styles {
 	z-index: 1;
 	position: relative;
 }
@@ -508,7 +481,7 @@ h1 {
 	height: 21px;
 	margin: 6px 0 0 0;
 }
-.wrapper .aside2__buttons-text-align, .wrapper .aside2__buttons-color {
+.wrapper .aside2__buttons-text-align, .wrapper .aside2__buttons-color, .wrapper .aside2__buttons-font-styles {
 	display: -ms-grid;
 	display: grid;
 	gap: 3px;
@@ -523,16 +496,16 @@ h1 {
 	border: 2px solid #ffffff;
 	margin: -23px 0 19px 0;
 }
-.wrapper .aside2__buttons-text-align .aside2__button, .wrapper .aside2__buttons-color .aside2__button {
+.wrapper .aside2__buttons-text-align .aside2__button, .wrapper .aside2__buttons-color .aside2__button, .wrapper .aside2__buttons-font-styles .aside2__button {
 	height: 26px;
 	width: 26px;
 	border: 1.6px solid #ffffff;
 }
-.wrapper .aside2__buttons-text-align .aside2__button svg, .wrapper .aside2__buttons-color .aside2__button svg {
+.wrapper .aside2__buttons-text-align .aside2__button svg, .wrapper .aside2__buttons-color .aside2__button svg, .wrapper .aside2__buttons-font-styles .aside2__button svg {
 	height: 15px;
 	margin: 5px 0 0 0;
 }
-.wrapper .aside2__buttons-text-align .aside2__button div, .wrapper .aside2__buttons-color .aside2__button div {
+.wrapper .aside2__buttons-text-align .aside2__button div, .wrapper .aside2__buttons-color .aside2__button div, .wrapper .aside2__buttons-font-styles .aside2__button div {
 	height: 15px;
 	width: 15px;
 }
@@ -543,6 +516,10 @@ h1 {
 .wrapper .aside2__buttons-color {
 	-webkit-transition: all 0.4s linear;
 	transition: all 0.4s linear;
+}
+.wrapper .aside2__buttons-font-styles {
+	-webkit-transition: all 0.25s linear;
+	transition: all 0.25s linear;
 }
 .wrapper .aside2 ._open-text-align {
 	visibility: visible;
@@ -555,6 +532,13 @@ h1 {
 	visibility: visible;
 	opacity: 1;
 	height: 290px;
+	padding: 25px 0 3px 0;
+	margin: -23px 0 0 0;
+}
+.wrapper .aside2 ._open-font-styles {
+	visibility: visible;
+	opacity: 1;
+	height: 117px;
 	padding: 25px 0 3px 0;
 	margin: -23px 0 0 0;
 }
@@ -594,6 +578,9 @@ h1 {
 .wrapper .aside2 ._active div {
 	border: 1px solid #FFFFFF;
 }
+.wrapper .aside2 ._active span {
+	color: #fff;
+}
 .wrapper .aside2 ._error {
 	background-color: #ff0000;
 }
@@ -607,6 +594,35 @@ h1 {
 	fill: #FFFFFF;
 }
 
+@media (hover: hover) {
+	.pop-up__buttons button:nth-child(1):hover {
+		margin: 0 6px 0 0;
+		background-color: rgba(70, 70, 70, 0.9);
+		color: rgba(255, 255, 255, 0.9);
+	}
+	.pop-up__button:hover {
+		background-color: rgba(240, 240, 240, 0.9);
+		color: rgba(51, 51, 51, 0.9);
+		border: 2px solid rgba(240, 240, 240, 0.9);
+	}
+	.wrapper .aside2__button:hover {
+		background-color: #333;
+	}
+	.wrapper .aside2__button:hover svg {
+		fill: #FFFFFF;
+	}
+	.wrapper .aside2__button:hover div {
+		border: 1px solid #FFFFFF;
+	}
+	.wrapper .aside2__button:hover span {
+		color: #fff;
+	}
+}
+@media (max-height: 450px) {
+	.pop-up__body {
+		margin: 0 0 0 0;
+	}
+}
 @media (max-width: 1000px) {
 	.wrapper .header {
 		border: 0px;

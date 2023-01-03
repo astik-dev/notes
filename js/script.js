@@ -11,6 +11,8 @@ const colorMenu = aside2Menu.querySelector("#buttons-group__color");
 const styles = document.querySelector("#styles");
 const burgerAllNotesButton = document.querySelector(".header__burger-all-notes-button");
 const aside1 = document.querySelector(".aside1");
+const fontStylesMenu = aside2Menu.querySelector("#buttons-group__font-styles");
+const fontStylesButton = aside2Menu.querySelector("#button__font-styles");
 
 noteTitle.value = "";
 noteText.value = "";
@@ -20,6 +22,7 @@ let currentFocusTextarea = "text";
 let currentColor = "#FFFFFF";
 let initialPoint;
 let finalPoint;
+let currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
 
 
 if (localStorage.getItem("notes") == null) {
@@ -30,20 +33,7 @@ note = JSON.parse(note);
 
 
 
-function errorButton (idButton, errorClass, onlyAside2Button) {
-	if (onlyAside2Button != true) {
-		let noteButton;
-		if (currentNoteId != undefined) {
-			noteButton = document.querySelector(`#note_${currentNoteId}`);
-		};
-		if (noteButton != undefined) {
-			noteButton.classList.add(errorClass);
-			function removeClassNote () {
-				noteButton.classList.remove(errorClass);
-			};
-			setTimeout(removeClassNote, 1000);
-		}
-	} 
+function errorButton (idButton, errorClass) {
 	const button = document.querySelector(`#${idButton}`);
 	button.classList.add(errorClass);
 	function removeClass () {
@@ -75,6 +65,7 @@ function checkEmptyValue (idButton, errorClass) {
 function saveNewNoteOrSaveOldNote () {
 	closeTextAlignMenu();
 	closeColorMenu();
+	closeFontStylesMenu();
 	if (currentNoteId != undefined) {
 		saveOldNote("button__save", "_error");
 	} else {
@@ -89,7 +80,7 @@ function saveOldNote(idButton, errorClass) {
 		let title = String(noteTitle.value);
 		let text = String(noteText.value);
 
-		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign, color: currentColor,},};
+		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles,},};
 		localStorage.setItem("notes", JSON.stringify(note));
 		refreshSavedNotes();
 	}
@@ -113,11 +104,12 @@ function saveNewNote (idButton, errorClass) {
 			aside1AllNotes.innerHTML = "";
 		}
 
-		note.push({title: title, text: text, settings: {align: currentAlign, color: currentColor,},});
+
+		note.push({title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles,},});
 		localStorage.setItem("notes", JSON.stringify(note));
 		
 		aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
-			<button class="aside1__button"  id="note_${note.length-1}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span>${minTitle}</span></button>
+															<button class="aside1__button"  id="note_${note.length-1}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span>${minTitle}</span></button>
 	 													</li>`);
 		currentNoteId = note.length-1;
 
@@ -139,7 +131,7 @@ function showSavedNotes () {
 				minTitle = cutTitle(note[i].title, 18, "..");
 			}
 			aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
-				<button class="aside1__button" id="note_${i}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span>${minTitle}</span></button>
+																<button class="aside1__button" id="note_${i}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span>${minTitle}</span></button>
 		 													</li>`);
 			setColorStyles(i);
 		}
@@ -162,6 +154,7 @@ function refreshSavedNotes () {
 function addNewNote() {
 	closeTextAlignMenu();
 	closeColorMenu();
+	closeFontStylesMenu();
 
 	let create;
 	let title = String(noteTitle.value);
@@ -187,9 +180,12 @@ function addNewNote() {
 		noteText.value = "";
 		currentNoteId = undefined;
 		currentAlign = {text: "left", title: "left",};
+		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
+		setCurrentFontStyles();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
+		refreshActiveButtonInFontStylesMenu();
 		titleHeightLimit("off");
 		markCurrentNote();
 		currentColor = "#FFFFFF";
@@ -208,9 +204,10 @@ function aside2MenuButtons(event) {
 	if (buttonId != undefined) {
 		if (buttonId == "button__save") {saveNewNoteOrSaveOldNote();}
 		else if (buttonId == "button__new-file") {addNewNote();}
-		else if (buttonId == "button__trash") {popUp("Delete note", "This note will be permanently deleted", {text: "Cancel", function(){errorButton ("button__trash", "_error", true)}}, {text: "Delete", function(){deleteNote(); errorButton("button__trash", "_successful", true)}}, function(){errorButton ("button__trash", "_error", true);});}
+		else if (buttonId == "button__trash") {popUp("Delete note", "This note will be permanently deleted", {text: "Cancel", function(){errorButton ("button__trash", "_error")}}, {text: "Delete", function(){deleteNote(); errorButton("button__trash", "_successful")}}, function(){errorButton ("button__trash", "_error");});}
 		else if (buttonId == "button__text-align") {openAndCloseAlignMenu();}
 		else if (buttonId == "button__color") {openAndCloseColorMenu();}
+		else if (buttonId == "button__font-styles") {openAndCloseFontStylesMenu();}
 	}
 }
 
@@ -235,15 +232,19 @@ function importNoteIntoEditor (event) {
 	if (noteId != undefined) {
 		closeTextAlignMenu();
 		closeColorMenu();
+		closeFontStylesMenu();
 		let notePositionInArray = Number(noteId.substr(5));
 		currentNoteId = notePositionInArray;
 		noteTitle.value = note[notePositionInArray].title;
 		noteText.value = note[notePositionInArray].text;
-		currentAlign = note[notePositionInArray].settings.align;
+		currentAlign = {...note[notePositionInArray].settings.align};
+		currentFontStyles = {...note[notePositionInArray].settings.fontStyles, title: {...note[notePositionInArray].settings.fontStyles.title}, text: {...note[notePositionInArray].settings.fontStyles.text}};
 		setCurrentAlign("title");
 		setCurrentAlign("text");
+		setCurrentFontStyles();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInColorMenu();
+		refreshActiveButtonInFontStylesMenu();
 		titleHeightLimit("on");
 		markCurrentNote();
 		setColor("import");
@@ -262,9 +263,12 @@ function deleteNote() {
 		noteText.value = "";
 		currentNoteId = undefined;
 		currentAlign = {text: "left", title: "left",};
+		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
+		setCurrentFontStyles();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
+		refreshActiveButtonInFontStylesMenu();
 		titleHeightLimit("off");
 		currentColor = "#FFFFFF";
 		setColor("new");
@@ -274,9 +278,13 @@ function deleteNote() {
 		noteText.value = "";
 		currentNoteId = undefined;
 		currentAlign = {text: "left", title: "left",};
+		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
+		setCurrentFontStyles();
+
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
+		refreshActiveButtonInFontStylesMenu();
 		titleHeightLimit("off");
 		currentColor = "#FFFFFF";
 		setColor("new");
@@ -315,6 +323,7 @@ function markCurrentNote() {
 function popUp(title, text, button1Object, button2Object, popUpEmptyPlaceFunction) {
 	closeTextAlignMenu();
 	closeColorMenu();
+	closeFontStylesMenu();
 
 	const popUpAllElements = document.querySelector(".pop-up");
 	const popUpBody = document.querySelector(".pop-up__body");
@@ -373,6 +382,7 @@ function setVH() {
 
 function openAndCloseAlignMenu() {
 	closeColorMenu();
+	closeFontStylesMenu();
 	textAlignMenu.classList.toggle("_open-text-align");
 	textAlignButton.classList.toggle("_active");
 
@@ -498,6 +508,7 @@ function setColorStyles(i) {
 
 function openAndCloseColorMenu() {
 	closeTextAlignMenu();
+	closeFontStylesMenu();
 	colorMenu.classList.toggle("_open-color");
 	colorButton.classList.toggle("_active");
 
@@ -583,7 +594,6 @@ function titleHeightLimit(onOff) {
 	setFullTitleHeight();
 	if (onOff == "on") {
 		let amountOfString = (noteTitle.scrollHeight) / 26;
-		console.log(amountOfString);
 		if (amountOfString > 3) {
 			let newHeight = 3 * 26;
 			noteTitle.style.height = newHeight + 'px';
@@ -594,12 +604,52 @@ function titleHeightLimit(onOff) {
 
 
 
+function openAndCloseFontStylesMenu() {
+	closeTextAlignMenu();
+	closeColorMenu();
+
+	fontStylesMenu.classList.toggle("_open-font-styles");
+	fontStylesButton.classList.toggle("_active");
+
+	refreshActiveButtonInFontStylesMenu();
+}
+
+
+
+function refreshActiveButtonInFontStylesMenu() {
+	const boldButton = fontStylesMenu.querySelector("#button__font-style-bold");
+	const italicButton = fontStylesMenu.querySelector("#button__font-style-italic");
+	const underlineButton = fontStylesMenu.querySelector("#button__font-style-underline");
+	
+	if (currentFontStyles[currentFocusTextarea].bold) {boldButton.classList.add("_active");} else {boldButton.classList.remove("_active");}
+	if (currentFontStyles[currentFocusTextarea].italic) {italicButton.classList.add("_active");} else {italicButton.classList.remove("_active");}
+	if (currentFontStyles[currentFocusTextarea].underline) {underlineButton.classList.add("_active");} else {underlineButton.classList.remove("_active");}
+}
+
+
+
+function setCurrentFontStyles() {
+	if (currentFontStyles.title.bold) {noteTitle.style.fontWeight = 700;} else {noteTitle.style.fontWeight = "";}
+	if (currentFontStyles.title.italic) {noteTitle.style.fontStyle = "italic";} else {noteTitle.style.fontStyle = "";}
+	if (currentFontStyles.title.underline) {noteTitle.style.textDecoration = "underline";} else {noteTitle.style.textDecoration = "";}
+
+	if (currentFontStyles.text.bold) {noteText.style.fontWeight = 700;} else {noteText.style.fontWeight = "";}
+	if (currentFontStyles.text.italic) {noteText.style.fontStyle = "italic";} else {noteText.style.fontStyle = "";}
+	if (currentFontStyles.text.underline) {noteText.style.textDecoration = "underline";} else {noteText.style.textDecoration = "";}
+}
+
+
+
+function closeFontStylesMenu() {
+	fontStylesMenu.classList.remove("_open-font-styles");
+	fontStylesButton.classList.remove("_active");
+}
 
 
 
 
-showSavedNotes();
-setVH();
+
+
 
 noteTitle.addEventListener('input', function (event) {
 	titleHeightLimit("off");
@@ -617,11 +667,13 @@ window.addEventListener('resize', setVH);
 noteTitle.addEventListener("focus", function (event) {
 	currentFocusTextarea = "title";
 	refreshActiveButtonInAlignMenu();
+	refreshActiveButtonInFontStylesMenu();
 	closeColorMenu();
 });
 noteText.addEventListener("focus", function (event) {
 	currentFocusTextarea = "text";
 	refreshActiveButtonInAlignMenu();
+	refreshActiveButtonInFontStylesMenu();
 	closeColorMenu();
 	titleHeightLimit("on");
 });
@@ -635,3 +687,25 @@ window.addEventListener("click", function (event) {
 		openClassForAside1("remove");
 	}
 });
+
+fontStylesMenu.addEventListener("click", function (event) {
+	let clickedButton = findIdWithSVG(event.target, "button__font-style-");
+	
+	if (clickedButton != undefined) {
+		clickedButton = clickedButton.slice(19);
+
+		if (currentFontStyles[currentFocusTextarea][clickedButton] == true) {
+			currentFontStyles[currentFocusTextarea][clickedButton] = false;
+		} else {
+			currentFontStyles[currentFocusTextarea][clickedButton] = true;
+		}
+
+		refreshActiveButtonInFontStylesMenu();
+		setCurrentFontStyles();
+	}
+});
+
+
+
+showSavedNotes();
+setVH();

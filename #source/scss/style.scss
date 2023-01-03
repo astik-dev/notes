@@ -78,11 +78,6 @@ h1 {
 			background-color: rgba(51, 51, 51, 0.9);
 			color: rgba(255, 255, 255, 0.9);
 		}
-		button:nth-child(1):hover {
-			margin: 0 6px 0 0;
-			background-color: rgba(70, 70, 70, 0.9);
-			color: rgba(255, 255, 255, 0.9);
-		}
 	}
 	&__button {
 		font-size: 14px;
@@ -93,12 +88,6 @@ h1 {
 		padding: 1px 5px;
 		font-weight: 700;
 		border: 2px solid rgba(255, 255, 255, 0.9);
-
-		&:hover {
-			background-color: rgba(240, 240, 240, 0.9);
-			color: rgba(51, 51, 51, 0.9);
-			border: 2px solid rgba(240, 240, 240, 0.9);
-		}
 	}
 }
 
@@ -237,26 +226,9 @@ h1 {
 
 				transition: all 0.15s linear 0s;
 			}
-
-			&:hover {
-				background-color: #333;
-				color: #FFFFFF;
-
-				svg {
-					fill: #fff;
-				}
-			}
 		}
 
 		._active {}
-		._error {
-			background-color: #ff0000;
-			color: #FFFFFF;
-
-			svg {
-				fill: #FFFFFF;
-			}
-		}
 	}
 
 	// =============== main ===============
@@ -362,20 +334,15 @@ h1 {
 				transition: all 0.15s linear 0s;
 			}
 
-			&:hover {
-				background-color: #333;
-
-				svg {
-					fill: #FFFFFF;
-				}
-
-				div {
-					border: 1px solid #FFFFFF;
-				}
+			span {
+				font-size: 16px;
+				color: #333;
+				font-weight: 500; 
 			}
 		}
 		#button__text-align,
-		#button__color {
+		#button__color,
+		#button__font-styles {
 			z-index: 1;
 			position: relative;		
 		}
@@ -386,7 +353,8 @@ h1 {
 			}
 		}
 		&__buttons-text-align,
-		&__buttons-color {
+		&__buttons-color,
+		&__buttons-font-styles {
 			display: grid;
 			gap: 3px;
 			justify-items: center;
@@ -423,6 +391,9 @@ h1 {
 		&__buttons-color {
 			transition: all 0.4s linear;
 		}
+		&__buttons-font-styles {
+			transition: all 0.25s linear;
+		}
 
 		._open-text-align {
 			visibility: visible;
@@ -436,6 +407,14 @@ h1 {
 			visibility: visible;
 			opacity: 1;	
 			height: 290px;
+
+			padding: 25px 0 3px 0;
+			margin: -23px 0 0 0;
+		}
+		._open-font-styles {
+			visibility: visible;
+			opacity: 1;	
+			height: 117px;
 
 			padding: 25px 0 3px 0;
 			margin: -23px 0 0 0;
@@ -496,6 +475,9 @@ h1 {
 			div {
 				border: 1px solid #FFFFFF;
 			}
+			span {
+				color: #fff;
+			}
 		}
 		._error {
 			background-color: #ff0000;
@@ -514,6 +496,53 @@ h1 {
 }
 
 
+
+// ================= @media (hover: hover) =================
+@media (hover: hover) {
+	.pop-up {
+		&__buttons {
+			button:nth-child(1):hover {
+				margin: 0 6px 0 0;
+				background-color: rgba(70, 70, 70, 0.9);
+				color: rgba(255, 255, 255, 0.9);
+			}
+		}
+		&__button {
+			&:hover {
+				background-color: rgba(240, 240, 240, 0.9);
+				color: rgba(51, 51, 51, 0.9);
+				border: 2px solid rgba(240, 240, 240, 0.9);
+			}
+		}
+	}
+	.wrapper {
+		.aside2 {
+			&__button {
+				&:hover {
+					background-color: #333;
+					svg {
+						fill: #FFFFFF;
+					}
+					div {
+						border: 1px solid #FFFFFF;
+					}
+					span {
+						color: #fff;
+					}
+				}
+			}
+		}
+	}
+}
+
+// =============== @media (max-height: 450px) ===============
+@media (max-height: 450px) {
+	.pop-up {
+		&__body {
+			margin: 0 0 0 0;
+		}
+	}
+}
 
 // =============== @media (max-width: 1000px) ===============
 @media (max-width: 1000px) {
