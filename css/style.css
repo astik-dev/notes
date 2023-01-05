@@ -473,7 +473,8 @@ h1 {
 }
 .wrapper .aside2 #button__text-align,
 .wrapper .aside2 #button__color,
-.wrapper .aside2 #button__font-styles {
+.wrapper .aside2 #button__font-styles,
+.wrapper .aside2 #button__font-size {
 	z-index: 1;
 	position: relative;
 }
@@ -481,7 +482,7 @@ h1 {
 	height: 21px;
 	margin: 6px 0 0 0;
 }
-.wrapper .aside2__buttons-text-align, .wrapper .aside2__buttons-color, .wrapper .aside2__buttons-font-styles {
+.wrapper .aside2__buttons-text-align, .wrapper .aside2__buttons-color, .wrapper .aside2__buttons-font-styles, .wrapper .aside2__range-font-size {
 	display: -ms-grid;
 	display: grid;
 	gap: 3px;
@@ -496,16 +497,16 @@ h1 {
 	border: 2px solid #ffffff;
 	margin: -23px 0 19px 0;
 }
-.wrapper .aside2__buttons-text-align .aside2__button, .wrapper .aside2__buttons-color .aside2__button, .wrapper .aside2__buttons-font-styles .aside2__button {
+.wrapper .aside2__buttons-text-align .aside2__button, .wrapper .aside2__buttons-color .aside2__button, .wrapper .aside2__buttons-font-styles .aside2__button, .wrapper .aside2__range-font-size .aside2__button {
 	height: 26px;
 	width: 26px;
 	border: 1.6px solid #ffffff;
 }
-.wrapper .aside2__buttons-text-align .aside2__button svg, .wrapper .aside2__buttons-color .aside2__button svg, .wrapper .aside2__buttons-font-styles .aside2__button svg {
+.wrapper .aside2__buttons-text-align .aside2__button svg, .wrapper .aside2__buttons-color .aside2__button svg, .wrapper .aside2__buttons-font-styles .aside2__button svg, .wrapper .aside2__range-font-size .aside2__button svg {
 	height: 15px;
 	margin: 5px 0 0 0;
 }
-.wrapper .aside2__buttons-text-align .aside2__button div, .wrapper .aside2__buttons-color .aside2__button div, .wrapper .aside2__buttons-font-styles .aside2__button div {
+.wrapper .aside2__buttons-text-align .aside2__button div, .wrapper .aside2__buttons-color .aside2__button div, .wrapper .aside2__buttons-font-styles .aside2__button div, .wrapper .aside2__range-font-size .aside2__button div {
 	height: 15px;
 	width: 15px;
 }
@@ -520,6 +521,79 @@ h1 {
 .wrapper .aside2__buttons-font-styles {
 	-webkit-transition: all 0.25s linear;
 	transition: all 0.25s linear;
+}
+.wrapper .aside2__range-font-size {
+	-webkit-transition: all 0.3s linear;
+	transition: all 0.3s linear;
+}
+.wrapper .aside2__range-font-size {
+	-ms-grid-rows: auto 1fr;
+	grid-template-rows: auto 1fr;
+	position: relative;
+}
+.wrapper .aside2__range-number {
+	display: inline-block;
+	-webkit-transform: translate(-24px, 0);
+	        transform: translate(-24px, 0);
+	font-weight: 700;
+	font-size: 16px;
+	padding: 3px 0 0 1.5px;
+	background: #333;
+	height: 26px;
+	width: 26px;
+	border: 1.6px solid #ffffff;
+	border-radius: 10px;
+}
+.wrapper .aside2__range-steps {
+	position: absolute;
+	height: 66px;
+	width: 5px;
+	left: 6px;
+	top: 46px;
+	-webkit-transition: all 0.15s linear;
+	transition: all 0.15s linear;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	    -ms-flex-direction: column;
+	        flex-direction: column;
+	-webkit-box-pack: justify;
+	    -ms-flex-pack: justify;
+	        justify-content: space-between;
+}
+.wrapper .aside2__range-steps div {
+	height: 1px;
+	width: 100%;
+	background-color: #fff;
+}
+.wrapper .aside2__range {
+	-webkit-appearance: none;
+	width: 80px;
+	height: 8px;
+	-webkit-transform: rotate(-90deg) translate(-36px, -20px);
+	        transform: rotate(-90deg) translate(-36px, -20px);
+	background: #333;
+	border-radius: 4px;
+}
+.wrapper .aside2__range::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	background: #333;
+	width: 14px;
+	height: 14px;
+	border-radius: 7px;
+	border: 3px solid #fff;
+	cursor: pointer;
+}
+.wrapper .aside2__range::-moz-range-thumb {
+	box-sizing: border-box;
+	background: #333;
+	width: 14px;
+	height: 14px;
+	border-radius: 7px;
+	border: 3px solid #fff;
+	cursor: pointer;
 }
 .wrapper .aside2 ._open-text-align {
 	visibility: visible;
@@ -541,6 +615,16 @@ h1 {
 	height: 117px;
 	padding: 25px 0 3px 0;
 	margin: -23px 0 0 0;
+}
+.wrapper .aside2 ._open-font-size {
+	visibility: visible;
+	opacity: 1;
+	height: 141px;
+	padding: 25px 0 3px 0;
+	margin: -23px 0 0 0;
+}
+.wrapper .aside2 ._open-font-size .aside2__range-steps {
+	top: 61px;
 }
 .wrapper .aside2 #button__color-FFFFFF div {
 	background-color: #FFFFFF;

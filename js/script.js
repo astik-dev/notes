@@ -13,6 +13,10 @@ const burgerAllNotesButton = document.querySelector(".header__burger-all-notes-b
 const aside1 = document.querySelector(".aside1");
 const fontStylesMenu = aside2Menu.querySelector("#buttons-group__font-styles");
 const fontStylesButton = aside2Menu.querySelector("#button__font-styles");
+const fontSizeMenu = aside2Menu.querySelector("#range__font-size");
+const fontSizeButton = aside2Menu.querySelector("#button__font-size");
+const rangeFontSize = fontSizeMenu.querySelector("#range-font-size");
+const rangeNumberFontSize = fontSizeMenu.querySelector(".aside2__range-number");
 
 noteTitle.value = "";
 noteText.value = "";
@@ -23,6 +27,7 @@ let currentColor = "#FFFFFF";
 let initialPoint;
 let finalPoint;
 let currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
+let currentFontSize = {title: 20, text: 16};
 
 
 if (localStorage.getItem("notes") == null) {
@@ -66,6 +71,7 @@ function saveNewNoteOrSaveOldNote () {
 	closeTextAlignMenu();
 	closeColorMenu();
 	closeFontStylesMenu();
+	closeFontSizeMenu();
 	if (currentNoteId != undefined) {
 		saveOldNote("button__save", "_error");
 	} else {
@@ -80,7 +86,7 @@ function saveOldNote(idButton, errorClass) {
 		let title = String(noteTitle.value);
 		let text = String(noteText.value);
 
-		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles,},};
+		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles, fontSize: currentFontSize,},};
 		localStorage.setItem("notes", JSON.stringify(note));
 		refreshSavedNotes();
 	}
@@ -105,7 +111,7 @@ function saveNewNote (idButton, errorClass) {
 		}
 
 
-		note.push({title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles,},});
+		note.push({title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles, fontSize: currentFontSize,},});
 		localStorage.setItem("notes", JSON.stringify(note));
 		
 		aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
@@ -155,6 +161,7 @@ function addNewNote() {
 	closeTextAlignMenu();
 	closeColorMenu();
 	closeFontStylesMenu();
+	closeFontSizeMenu();
 
 	let create;
 	let title = String(noteTitle.value);
@@ -181,11 +188,14 @@ function addNewNote() {
 		currentNoteId = undefined;
 		currentAlign = {text: "left", title: "left",};
 		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
+		currentFontSize = {title: 20, text: 16};
 		setCurrentFontStyles();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
+		setCurrentFontSize();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInFontStylesMenu();
+		refreshRangeInFontSizeMenu();
 		titleHeightLimit("off");
 		markCurrentNote();
 		currentColor = "#FFFFFF";
@@ -208,6 +218,7 @@ function aside2MenuButtons(event) {
 		else if (buttonId == "button__text-align") {openAndCloseAlignMenu();}
 		else if (buttonId == "button__color") {openAndCloseColorMenu();}
 		else if (buttonId == "button__font-styles") {openAndCloseFontStylesMenu();}
+		else if (buttonId == "button__font-size") {openAndCloseFontSizeMenu();}
 	}
 }
 
@@ -233,18 +244,22 @@ function importNoteIntoEditor (event) {
 		closeTextAlignMenu();
 		closeColorMenu();
 		closeFontStylesMenu();
+		closeFontSizeMenu();
 		let notePositionInArray = Number(noteId.substr(5));
 		currentNoteId = notePositionInArray;
 		noteTitle.value = note[notePositionInArray].title;
 		noteText.value = note[notePositionInArray].text;
 		currentAlign = {...note[notePositionInArray].settings.align};
 		currentFontStyles = {...note[notePositionInArray].settings.fontStyles, title: {...note[notePositionInArray].settings.fontStyles.title}, text: {...note[notePositionInArray].settings.fontStyles.text}};
+		currentFontSize = {...note[notePositionInArray].settings.fontSize};
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		setCurrentFontStyles();
+		setCurrentFontSize();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInColorMenu();
 		refreshActiveButtonInFontStylesMenu();
+		refreshRangeInFontSizeMenu();
 		titleHeightLimit("on");
 		markCurrentNote();
 		setColor("import");
@@ -264,11 +279,14 @@ function deleteNote() {
 		currentNoteId = undefined;
 		currentAlign = {text: "left", title: "left",};
 		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
+		currentFontSize = {title: 20, text: 16};
 		setCurrentFontStyles();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
+		setCurrentFontSize();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInFontStylesMenu();
+		refreshRangeInFontSizeMenu();
 		titleHeightLimit("off");
 		currentColor = "#FFFFFF";
 		setColor("new");
@@ -279,12 +297,14 @@ function deleteNote() {
 		currentNoteId = undefined;
 		currentAlign = {text: "left", title: "left",};
 		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
+		currentFontSize = {title: 20, text: 16};
 		setCurrentFontStyles();
-
+		setCurrentFontSize();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInFontStylesMenu();
+		refreshRangeInFontSizeMenu();
 		titleHeightLimit("off");
 		currentColor = "#FFFFFF";
 		setColor("new");
@@ -324,6 +344,7 @@ function popUp(title, text, button1Object, button2Object, popUpEmptyPlaceFunctio
 	closeTextAlignMenu();
 	closeColorMenu();
 	closeFontStylesMenu();
+	closeFontSizeMenu();
 
 	const popUpAllElements = document.querySelector(".pop-up");
 	const popUpBody = document.querySelector(".pop-up__body");
@@ -383,6 +404,8 @@ function setVH() {
 function openAndCloseAlignMenu() {
 	closeColorMenu();
 	closeFontStylesMenu();
+	closeFontSizeMenu();
+
 	textAlignMenu.classList.toggle("_open-text-align");
 	textAlignButton.classList.toggle("_active");
 
@@ -509,6 +532,8 @@ function setColorStyles(i) {
 function openAndCloseColorMenu() {
 	closeTextAlignMenu();
 	closeFontStylesMenu();
+	closeFontSizeMenu();
+
 	colorMenu.classList.toggle("_open-color");
 	colorButton.classList.toggle("_active");
 
@@ -607,6 +632,7 @@ function titleHeightLimit(onOff) {
 function openAndCloseFontStylesMenu() {
 	closeTextAlignMenu();
 	closeColorMenu();
+	closeFontSizeMenu();
 
 	fontStylesMenu.classList.toggle("_open-font-styles");
 	fontStylesButton.classList.toggle("_active");
@@ -647,6 +673,39 @@ function closeFontStylesMenu() {
 
 
 
+function openAndCloseFontSizeMenu() {
+	closeTextAlignMenu();
+	closeColorMenu();
+	closeFontStylesMenu();
+
+	fontSizeMenu.classList.toggle("_open-font-size");
+	fontSizeButton.classList.toggle("_active");
+
+	refreshRangeInFontSizeMenu();
+}
+
+
+
+function refreshRangeInFontSizeMenu() {
+	rangeFontSize.value = currentFontSize[currentFocusTextarea];
+	rangeNumberFontSize.innerHTML = `${rangeFontSize.value}`;
+}
+
+
+
+function setCurrentFontSize() {
+	noteTitle.style.fontSize = currentFontSize.title + "px";
+	noteText.style.fontSize = currentFontSize.text + "px";
+}
+
+
+
+function closeFontSizeMenu() {
+	fontSizeMenu.classList.remove("_open-font-size");
+	fontSizeButton.classList.remove("_active");
+}
+
+
 
 
 
@@ -668,12 +727,14 @@ noteTitle.addEventListener("focus", function (event) {
 	currentFocusTextarea = "title";
 	refreshActiveButtonInAlignMenu();
 	refreshActiveButtonInFontStylesMenu();
+	refreshRangeInFontSizeMenu();
 	closeColorMenu();
 });
 noteText.addEventListener("focus", function (event) {
 	currentFocusTextarea = "text";
 	refreshActiveButtonInAlignMenu();
 	refreshActiveButtonInFontStylesMenu();
+	refreshRangeInFontSizeMenu();
 	closeColorMenu();
 	titleHeightLimit("on");
 });
@@ -703,6 +764,12 @@ fontStylesMenu.addEventListener("click", function (event) {
 		refreshActiveButtonInFontStylesMenu();
 		setCurrentFontStyles();
 	}
+});
+
+rangeFontSize.addEventListener("input", function (event) {
+	currentFontSize[currentFocusTextarea] = rangeFontSize.value;
+	refreshRangeInFontSizeMenu();
+	setCurrentFontSize();
 });
 
 

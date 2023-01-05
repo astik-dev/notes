@@ -342,7 +342,8 @@ h1 {
 		}
 		#button__text-align,
 		#button__color,
-		#button__font-styles {
+		#button__font-styles,
+		#button__font-size {
 			z-index: 1;
 			position: relative;		
 		}
@@ -354,7 +355,8 @@ h1 {
 		}
 		&__buttons-text-align,
 		&__buttons-color,
-		&__buttons-font-styles {
+		&__buttons-font-styles,
+		&__range-font-size {
 			display: grid;
 			gap: 3px;
 			justify-items: center;
@@ -394,6 +396,72 @@ h1 {
 		&__buttons-font-styles {
 			transition: all 0.25s linear;
 		}
+		&__range-font-size {
+			transition: all 0.3s linear;
+		}
+
+		&__range-font-size{
+			grid-template-rows: auto 1fr;
+			position: relative;
+		}
+		&__range-number {
+			display: inline-block;
+			transform: translate(-24px, 0);
+			font-weight: 700;
+			font-size: 16px;
+			padding: 3px 0 0 1.5px;
+			background: #333;
+			height: 26px;
+			width: 26px;
+			border: 1.6px solid #ffffff;
+			border-radius: 10px;
+		}
+		&__range-steps {
+			position: absolute;
+			height: 66px;
+			width: 5px;
+			left: 6px;
+			top: 46px;
+			transition: all 0.15s linear;
+
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+
+			div {
+				height: 1px;
+				width: 100%;
+				background-color: #fff;	
+			}
+		}
+		&__range {
+			-webkit-appearance: none;
+			width: 80px;
+			height: 8px;
+			transform: rotate(-90deg) translate(-36px, -20px);
+			
+			background: #333;
+			border-radius: 4px;
+
+			&::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				background: #333;
+				width: 14px;
+				height: 14px;
+				border-radius: 7px;
+				border: 3px solid #fff;
+				cursor: pointer;
+			}
+			&::-moz-range-thumb {
+				box-sizing: border-box;
+				background: #333;
+				width: 14px;
+				height: 14px;
+				border-radius: 7px;
+				border: 3px solid #fff;
+				cursor: pointer;
+			}
+		}
 
 		._open-text-align {
 			visibility: visible;
@@ -418,6 +486,18 @@ h1 {
 
 			padding: 25px 0 3px 0;
 			margin: -23px 0 0 0;
+		}
+		._open-font-size {
+			visibility: visible;
+			opacity: 1;	
+			height: 141px;
+
+			padding: 25px 0 3px 0;
+			margin: -23px 0 0 0;
+
+			.aside2__range-steps {
+				top: 61px;
+			}
 		}
 
 		#button__color-FFFFFF {
