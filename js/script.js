@@ -21,6 +21,7 @@ const lineHeightMenu = aside2Menu.querySelector("#range__line-height");
 const lineHeightButton = aside2Menu.querySelector("#button__line-height");
 const rangeLineHeight = lineHeightMenu.querySelector("#range-line-height");
 const rangeNumberLineHeight = lineHeightMenu.querySelector(".aside2__range-number");
+const horizontalScrollButton = aside2Menu.querySelector("#button__horizontal-scroll");
 
 noteTitle.value = "";
 noteText.value = "";
@@ -33,6 +34,7 @@ let finalPoint;
 let currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
 let currentFontSize = {title: 20, text: 16};
 let currentLineHeight = {title: 26, text: 16,};
+let currentHorizontalScroll = false;
 
 
 if (localStorage.getItem("notes") == null) {
@@ -93,7 +95,7 @@ function saveOldNote(idButton, errorClass) {
 		let title = String(noteTitle.value);
 		let text = String(noteText.value);
 
-		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles, fontSize: currentFontSize, lineHeight: currentLineHeight,},};
+		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles, fontSize: currentFontSize, lineHeight: currentLineHeight, horizontalScroll: currentHorizontalScroll,},};
 		localStorage.setItem("notes", JSON.stringify(note));
 		refreshSavedNotes();
 	}
@@ -118,7 +120,7 @@ function saveNewNote (idButton, errorClass) {
 		}
 
 
-		note.push({title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles, fontSize: currentFontSize, lineHeight: currentLineHeight,},});
+		note.push({title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles, fontSize: currentFontSize, lineHeight: currentLineHeight, horizontalScroll: currentHorizontalScroll,},});
 		localStorage.setItem("notes", JSON.stringify(note));
 		
 		aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
@@ -202,11 +204,13 @@ function addNewNote() {
 		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
 		currentFontSize = {title: 20, text: 16};
 		currentLineHeight = {title: 26, text: 16,};
+		currentHorizontalScroll = false;
 		setCurrentFontStyles();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		setCurrentFontSize();
 		setCurrentLineHeight();
+		setHorizontalScroll();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInFontStylesMenu();
 		refreshRangeInFontSizeMenu();
@@ -235,6 +239,7 @@ function aside2MenuButtons(event) {
 		else if (buttonId == "button__font-styles") {openAndCloseFontStylesMenu();}
 		else if (buttonId == "button__font-size") {openAndCloseFontSizeMenu();}
 		else if (buttonId == "button__line-height") {openAndCloseLineHeightMenu();}
+		else if (buttonId == "button__horizontal-scroll") {addOrRemoveHorizontalScroll();}
 	}
 }
 
@@ -271,12 +276,14 @@ function importNoteIntoEditor (event) {
 		currentFontStyles = {...note[notePositionInArray].settings.fontStyles, title: {...note[notePositionInArray].settings.fontStyles.title}, text: {...note[notePositionInArray].settings.fontStyles.text}};
 		currentFontSize = {...note[notePositionInArray].settings.fontSize};
 		currentLineHeight = {...note[notePositionInArray].settings.lineHeight};
+		currentHorizontalScroll = note[notePositionInArray].settings.horizontalScroll;
 
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		setCurrentFontStyles();
 		setCurrentFontSize();
 		setCurrentLineHeight();
+		setHorizontalScroll();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInColorMenu();
 		refreshActiveButtonInFontStylesMenu();
@@ -303,11 +310,13 @@ function deleteNote() {
 		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
 		currentFontSize = {title: 20, text: 16};
 		currentLineHeight = {title: 26, text: 16,};
+		currentHorizontalScroll = false;
 		setCurrentFontStyles();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		setCurrentFontSize();
 		setCurrentLineHeight();
+		setHorizontalScroll();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInFontStylesMenu();
 		refreshRangeInFontSizeMenu();
@@ -324,11 +333,13 @@ function deleteNote() {
 		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
 		currentFontSize = {title: 20, text: 16};
 		currentLineHeight = {title: 26, text: 16,};
+		currentHorizontalScroll = false;
 		setCurrentFontStyles();
 		setCurrentFontSize();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		setCurrentLineHeight();
+		setHorizontalScroll();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInFontStylesMenu();
 		refreshRangeInFontSizeMenu();
@@ -795,6 +806,37 @@ function setCurrentLineHeight() {
 function closeLineHeightMenu() {
 	lineHeightMenu.classList.remove("_open-font-size");
 	lineHeightButton.classList.remove("_active");
+}
+
+
+
+function setHorizontalScroll () {
+	if (currentHorizontalScroll) {
+		noteText.setAttribute("wrap", "off");
+		horizontalScrollButton.classList.add("_active");
+	} else {
+		noteText.removeAttribute("wrap");
+		horizontalScrollButton.classList.remove("_active");
+	}
+}
+
+
+
+function addOrRemoveHorizontalScroll () {
+	closeTextAlignMenu();
+	closeColorMenu();
+	closeFontStylesMenu();
+	closeFontSizeMenu();
+	closeLineHeightMenu();
+
+	if (currentHorizontalScroll) {
+		currentHorizontalScroll = false;
+
+	} else {
+		currentHorizontalScroll = true;
+	}
+
+	setHorizontalScroll();
 }
 
 

@@ -4,6 +4,7 @@
 
 ::-webkit-scrollbar {
   	width: 5px;
+  	height: 5px;
 }
 ::-webkit-scrollbar-thumb {
     background-color: #FFFFFF;
@@ -355,6 +356,10 @@ h1 {
 		}
 		#button__line-height svg {
 			margin: 3px 0 0 0;
+		}
+		#button__horizontal-scroll svg {
+			margin: 2.5px 0 0 0;
+			transform: rotate(45deg);	
 		}
 		&__buttons-text-align,
 		&__buttons-color,

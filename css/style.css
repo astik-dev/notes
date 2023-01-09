@@ -73,6 +73,7 @@ h1, h2, h3, h4, h5, h6 {
 
 ::-webkit-scrollbar {
 	width: 5px;
+	height: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -484,6 +485,11 @@ h1 {
 }
 .wrapper .aside2 #button__line-height svg {
 	margin: 3px 0 0 0;
+}
+.wrapper .aside2 #button__horizontal-scroll svg {
+	margin: 2.5px 0 0 0;
+	-webkit-transform: rotate(45deg);
+	        transform: rotate(45deg);
 }
 .wrapper .aside2__buttons-text-align, .wrapper .aside2__buttons-color, .wrapper .aside2__buttons-font-styles, .wrapper .aside2__range-font-size, .wrapper .aside2__range-line-height {
 	display: -ms-grid;
