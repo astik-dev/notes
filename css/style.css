@@ -367,7 +367,6 @@ h1 {
 	font-weight: 500;
 	padding: 0 1px 0px 1px;
 	overflow-y: auto;
-	height: 26px;
 	scrollbar-width: thin;
 	scrollbar-color: white #333;
 }
@@ -474,7 +473,8 @@ h1 {
 .wrapper .aside2 #button__text-align,
 .wrapper .aside2 #button__color,
 .wrapper .aside2 #button__font-styles,
-.wrapper .aside2 #button__font-size {
+.wrapper .aside2 #button__font-size,
+.wrapper .aside2 #button__line-height {
 	z-index: 1;
 	position: relative;
 }
@@ -482,7 +482,10 @@ h1 {
 	height: 21px;
 	margin: 6px 0 0 0;
 }
-.wrapper .aside2__buttons-text-align, .wrapper .aside2__buttons-color, .wrapper .aside2__buttons-font-styles, .wrapper .aside2__range-font-size {
+.wrapper .aside2 #button__line-height svg {
+	margin: 3px 0 0 0;
+}
+.wrapper .aside2__buttons-text-align, .wrapper .aside2__buttons-color, .wrapper .aside2__buttons-font-styles, .wrapper .aside2__range-font-size, .wrapper .aside2__range-line-height {
 	display: -ms-grid;
 	display: grid;
 	gap: 3px;
@@ -497,16 +500,16 @@ h1 {
 	border: 2px solid #ffffff;
 	margin: -23px 0 19px 0;
 }
-.wrapper .aside2__buttons-text-align .aside2__button, .wrapper .aside2__buttons-color .aside2__button, .wrapper .aside2__buttons-font-styles .aside2__button, .wrapper .aside2__range-font-size .aside2__button {
+.wrapper .aside2__buttons-text-align .aside2__button, .wrapper .aside2__buttons-color .aside2__button, .wrapper .aside2__buttons-font-styles .aside2__button, .wrapper .aside2__range-font-size .aside2__button, .wrapper .aside2__range-line-height .aside2__button {
 	height: 26px;
 	width: 26px;
 	border: 1.6px solid #ffffff;
 }
-.wrapper .aside2__buttons-text-align .aside2__button svg, .wrapper .aside2__buttons-color .aside2__button svg, .wrapper .aside2__buttons-font-styles .aside2__button svg, .wrapper .aside2__range-font-size .aside2__button svg {
+.wrapper .aside2__buttons-text-align .aside2__button svg, .wrapper .aside2__buttons-color .aside2__button svg, .wrapper .aside2__buttons-font-styles .aside2__button svg, .wrapper .aside2__range-font-size .aside2__button svg, .wrapper .aside2__range-line-height .aside2__button svg {
 	height: 15px;
 	margin: 5px 0 0 0;
 }
-.wrapper .aside2__buttons-text-align .aside2__button div, .wrapper .aside2__buttons-color .aside2__button div, .wrapper .aside2__buttons-font-styles .aside2__button div, .wrapper .aside2__range-font-size .aside2__button div {
+.wrapper .aside2__buttons-text-align .aside2__button div, .wrapper .aside2__buttons-color .aside2__button div, .wrapper .aside2__buttons-font-styles .aside2__button div, .wrapper .aside2__range-font-size .aside2__button div, .wrapper .aside2__range-line-height .aside2__button div {
 	height: 15px;
 	width: 15px;
 }
@@ -522,11 +525,11 @@ h1 {
 	-webkit-transition: all 0.25s linear;
 	transition: all 0.25s linear;
 }
-.wrapper .aside2__range-font-size {
+.wrapper .aside2__range-font-size, .wrapper .aside2__range-line-height {
 	-webkit-transition: all 0.3s linear;
 	transition: all 0.3s linear;
 }
-.wrapper .aside2__range-font-size {
+.wrapper .aside2__range-font-size, .wrapper .aside2__range-line-height {
 	-ms-grid-rows: auto 1fr;
 	grid-template-rows: auto 1fr;
 	position: relative;

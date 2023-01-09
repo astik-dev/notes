@@ -17,6 +17,10 @@ const fontSizeMenu = aside2Menu.querySelector("#range__font-size");
 const fontSizeButton = aside2Menu.querySelector("#button__font-size");
 const rangeFontSize = fontSizeMenu.querySelector("#range-font-size");
 const rangeNumberFontSize = fontSizeMenu.querySelector(".aside2__range-number");
+const lineHeightMenu = aside2Menu.querySelector("#range__line-height");
+const lineHeightButton = aside2Menu.querySelector("#button__line-height");
+const rangeLineHeight = lineHeightMenu.querySelector("#range-line-height");
+const rangeNumberLineHeight = lineHeightMenu.querySelector(".aside2__range-number");
 
 noteTitle.value = "";
 noteText.value = "";
@@ -28,6 +32,7 @@ let initialPoint;
 let finalPoint;
 let currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
 let currentFontSize = {title: 20, text: 16};
+let currentLineHeight = {title: 26, text: 16,};
 
 
 if (localStorage.getItem("notes") == null) {
@@ -72,6 +77,8 @@ function saveNewNoteOrSaveOldNote () {
 	closeColorMenu();
 	closeFontStylesMenu();
 	closeFontSizeMenu();
+	closeLineHeightMenu();
+
 	if (currentNoteId != undefined) {
 		saveOldNote("button__save", "_error");
 	} else {
@@ -86,7 +93,7 @@ function saveOldNote(idButton, errorClass) {
 		let title = String(noteTitle.value);
 		let text = String(noteText.value);
 
-		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles, fontSize: currentFontSize,},};
+		note[currentNoteId] = {title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles, fontSize: currentFontSize, lineHeight: currentLineHeight,},};
 		localStorage.setItem("notes", JSON.stringify(note));
 		refreshSavedNotes();
 	}
@@ -111,12 +118,14 @@ function saveNewNote (idButton, errorClass) {
 		}
 
 
-		note.push({title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles, fontSize: currentFontSize,},});
+		note.push({title: title, text: text, settings: {align: currentAlign, color: currentColor, fontStyles: currentFontStyles, fontSize: currentFontSize, lineHeight: currentLineHeight,},});
 		localStorage.setItem("notes", JSON.stringify(note));
 		
 		aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
-															<button class="aside1__button"  id="note_${note.length-1}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span>${minTitle}</span></button>
+															<button class="aside1__button"  id="note_${note.length-1}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span></span></button>
 	 													</li>`);
+		let textSpan = aside1AllNotes.querySelector(`#note_${note.length-1} span`);
+		textSpan.textContent = minTitle;
 		currentNoteId = note.length-1;
 
 		setColorStyles(currentNoteId);
@@ -137,8 +146,10 @@ function showSavedNotes () {
 				minTitle = cutTitle(note[i].title, 18, "..");
 			}
 			aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
-																<button class="aside1__button" id="note_${i}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span>${minTitle}</span></button>
+																<button class="aside1__button" id="note_${i}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span></span></button>
 		 													</li>`);
+			let textSpan = aside1AllNotes.querySelector(`#note_${i} span`);
+			textSpan.textContent = minTitle;
 			setColorStyles(i);
 		}
 	} else {
@@ -162,6 +173,7 @@ function addNewNote() {
 	closeColorMenu();
 	closeFontStylesMenu();
 	closeFontSizeMenu();
+	closeLineHeightMenu();
 
 	let create;
 	let title = String(noteTitle.value);
@@ -189,13 +201,16 @@ function addNewNote() {
 		currentAlign = {text: "left", title: "left",};
 		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
 		currentFontSize = {title: 20, text: 16};
+		currentLineHeight = {title: 26, text: 16,};
 		setCurrentFontStyles();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		setCurrentFontSize();
+		setCurrentLineHeight();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInFontStylesMenu();
 		refreshRangeInFontSizeMenu();
+		refreshRangeInLineHeightMenu();
 		titleHeightLimit("off");
 		markCurrentNote();
 		currentColor = "#FFFFFF";
@@ -219,6 +234,7 @@ function aside2MenuButtons(event) {
 		else if (buttonId == "button__color") {openAndCloseColorMenu();}
 		else if (buttonId == "button__font-styles") {openAndCloseFontStylesMenu();}
 		else if (buttonId == "button__font-size") {openAndCloseFontSizeMenu();}
+		else if (buttonId == "button__line-height") {openAndCloseLineHeightMenu();}
 	}
 }
 
@@ -245,6 +261,8 @@ function importNoteIntoEditor (event) {
 		closeColorMenu();
 		closeFontStylesMenu();
 		closeFontSizeMenu();
+		closeLineHeightMenu();
+
 		let notePositionInArray = Number(noteId.substr(5));
 		currentNoteId = notePositionInArray;
 		noteTitle.value = note[notePositionInArray].title;
@@ -252,14 +270,18 @@ function importNoteIntoEditor (event) {
 		currentAlign = {...note[notePositionInArray].settings.align};
 		currentFontStyles = {...note[notePositionInArray].settings.fontStyles, title: {...note[notePositionInArray].settings.fontStyles.title}, text: {...note[notePositionInArray].settings.fontStyles.text}};
 		currentFontSize = {...note[notePositionInArray].settings.fontSize};
+		currentLineHeight = {...note[notePositionInArray].settings.lineHeight};
+
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		setCurrentFontStyles();
 		setCurrentFontSize();
+		setCurrentLineHeight();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInColorMenu();
 		refreshActiveButtonInFontStylesMenu();
 		refreshRangeInFontSizeMenu();
+		refreshRangeInLineHeightMenu();
 		titleHeightLimit("on");
 		markCurrentNote();
 		setColor("import");
@@ -280,13 +302,16 @@ function deleteNote() {
 		currentAlign = {text: "left", title: "left",};
 		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
 		currentFontSize = {title: 20, text: 16};
+		currentLineHeight = {title: 26, text: 16,};
 		setCurrentFontStyles();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
 		setCurrentFontSize();
+		setCurrentLineHeight();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInFontStylesMenu();
 		refreshRangeInFontSizeMenu();
+		refreshRangeInLineHeightMenu();
 		titleHeightLimit("off");
 		currentColor = "#FFFFFF";
 		setColor("new");
@@ -298,13 +323,16 @@ function deleteNote() {
 		currentAlign = {text: "left", title: "left",};
 		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
 		currentFontSize = {title: 20, text: 16};
+		currentLineHeight = {title: 26, text: 16,};
 		setCurrentFontStyles();
 		setCurrentFontSize();
 		setCurrentAlign("title");
 		setCurrentAlign("text");
+		setCurrentLineHeight();
 		refreshActiveButtonInAlignMenu();
 		refreshActiveButtonInFontStylesMenu();
 		refreshRangeInFontSizeMenu();
+		refreshRangeInLineHeightMenu();
 		titleHeightLimit("off");
 		currentColor = "#FFFFFF";
 		setColor("new");
@@ -345,6 +373,7 @@ function popUp(title, text, button1Object, button2Object, popUpEmptyPlaceFunctio
 	closeColorMenu();
 	closeFontStylesMenu();
 	closeFontSizeMenu();
+	closeLineHeightMenu();
 
 	const popUpAllElements = document.querySelector(".pop-up");
 	const popUpBody = document.querySelector(".pop-up__body");
@@ -405,6 +434,7 @@ function openAndCloseAlignMenu() {
 	closeColorMenu();
 	closeFontStylesMenu();
 	closeFontSizeMenu();
+	closeLineHeightMenu();
 
 	textAlignMenu.classList.toggle("_open-text-align");
 	textAlignButton.classList.toggle("_active");
@@ -533,6 +563,7 @@ function openAndCloseColorMenu() {
 	closeTextAlignMenu();
 	closeFontStylesMenu();
 	closeFontSizeMenu();
+	closeLineHeightMenu();
 
 	colorMenu.classList.toggle("_open-color");
 	colorButton.classList.toggle("_active");
@@ -597,32 +628,56 @@ function openClassForAside1(addRemoveToggle) {
 function titleHeightLimit(onOff) {
 	const currentMainHeight = document.querySelector(".main").clientHeight;
 	let availableTitleHeight;
+	let minLineHeight = currentLineHeight.title;
 
 	if (document.documentElement.clientWidth <= 767) {
 						  // = currentMainHeight - title.margin - line.margin - textarea.margin - (textarea.lineheight * 2)
-		availableTitleHeight = currentMainHeight - 15 - 10 - (8 + 15) - (22 * 2);
+		availableTitleHeight = currentMainHeight - 15 - 10 - (8 + 15) - (currentLineHeight.text * 2);
 	} else {
-		availableTitleHeight = currentMainHeight - 25 - 10 - (8 + 25) - (22 * 2);
+		availableTitleHeight = currentMainHeight - 25 - 10 - (8 + 25) - (currentLineHeight.text * 2);
 	}
 
 	function setFullTitleHeight() {
-		noteTitle.style.height = "26px";
+		noteTitle.style.height = currentLineHeight.title + "px";
 		let fullTitleHeight = noteTitle.scrollHeight;
 
 	  	if (fullTitleHeight > availableTitleHeight) {
 	  		noteTitle.style.height = availableTitleHeight + "px";
+	  	} else if ((fullTitleHeight + 1) > availableTitleHeight) {
+	  		noteTitle.style.height = availableTitleHeight + "px";
 	  	} else {
-	  		noteTitle.style.height = fullTitleHeight + "px";
+	  		noteTitle.style.height = fullTitleHeight + 1 + "px";
 	  	}
 	}
 
 	setFullTitleHeight();
+
 	if (onOff == "on") {
-		let amountOfString = (noteTitle.scrollHeight) / 26;
-		if (amountOfString > 3) {
-			let newHeight = 3 * 26;
-			noteTitle.style.height = newHeight + 'px';
-			noteTitle.scrollTop = 0;
+		const extraHeight = {
+			12: {12: 2, 14: 1},
+			14: {12: 4, 14: 2, 16: 2},
+			16: {12: 5, 14: 4, 16: 3, 18: 2, 20: 1,},
+			18: {12: 6, 14: 5, 16: 4, 18: 3, 20: 2, 22: 1,},
+			20: {12: 7, 14: 6, 16: 5, 18: 4, 20: 3, 22: 2, 24: 1,},
+			22: {12: 8, 14: 8, 16: 6, 18: 6, 20: 4, 22: 4, 24: 2, 26: 2,},
+			24: {12: 10, 14: 9, 16: 9, 18: 7, 20: 6, 22: 5, 24: 4, 26: 3, 28: 2, 30: 1,},
+			26: {12: 11, 14: 10, 16: 9, 18: 8, 20: 7, 22: 6, 24: 5, 26: 4, 28: 3, 30: 2, 32: 1,},
+			28: {12: 12, 14: 12, 16: 10, 18: 10, 20: 8, 22: 8, 24: 6, 26: 6, 28: 4, 30: 4, 32: 2, 34: 2,},
+		};
+
+		let threeLinesHeight;
+
+		if (extraHeight[currentFontSize.title][currentLineHeight.title] == undefined) {
+			threeLinesHeight = currentLineHeight.title * 3 + 1;
+		} else {
+			threeLinesHeight = (currentLineHeight.title * 3) + extraHeight[currentFontSize.title][currentLineHeight.title] + 1;
+		}
+
+		if ((noteTitle.scrollHeight - 1) >= threeLinesHeight) {
+			if (availableTitleHeight > threeLinesHeight) {
+				noteTitle.style.height = threeLinesHeight + "px";
+				noteTitle.scrollTop = 0;
+			}
 		}
 	}
 }
@@ -633,6 +688,7 @@ function openAndCloseFontStylesMenu() {
 	closeTextAlignMenu();
 	closeColorMenu();
 	closeFontSizeMenu();
+	closeLineHeightMenu();
 
 	fontStylesMenu.classList.toggle("_open-font-styles");
 	fontStylesButton.classList.toggle("_active");
@@ -677,6 +733,7 @@ function openAndCloseFontSizeMenu() {
 	closeTextAlignMenu();
 	closeColorMenu();
 	closeFontStylesMenu();
+	closeLineHeightMenu();
 
 	fontSizeMenu.classList.toggle("_open-font-size");
 	fontSizeButton.classList.toggle("_active");
@@ -707,6 +764,41 @@ function closeFontSizeMenu() {
 
 
 
+function openAndCloseLineHeightMenu() {
+	closeTextAlignMenu();
+	closeColorMenu();
+	closeFontStylesMenu();
+	closeFontSizeMenu();
+
+	lineHeightMenu.classList.toggle("_open-font-size");
+	lineHeightButton.classList.toggle("_active");
+
+	refreshRangeInLineHeightMenu()
+}
+
+
+
+function refreshRangeInLineHeightMenu() {
+	rangeLineHeight.value = currentLineHeight[currentFocusTextarea];
+	rangeNumberLineHeight.innerHTML = `${rangeLineHeight.value}`;
+}
+
+
+
+function setCurrentLineHeight() {
+	noteTitle.style.lineHeight = currentLineHeight.title + "px";
+	noteText.style.lineHeight = currentLineHeight.text + "px";
+}
+
+
+
+function closeLineHeightMenu() {
+	lineHeightMenu.classList.remove("_open-font-size");
+	lineHeightButton.classList.remove("_active");
+}
+
+
+
 
 
 
@@ -728,6 +820,7 @@ noteTitle.addEventListener("focus", function (event) {
 	refreshActiveButtonInAlignMenu();
 	refreshActiveButtonInFontStylesMenu();
 	refreshRangeInFontSizeMenu();
+	refreshRangeInLineHeightMenu();
 	closeColorMenu();
 });
 noteText.addEventListener("focus", function (event) {
@@ -735,6 +828,7 @@ noteText.addEventListener("focus", function (event) {
 	refreshActiveButtonInAlignMenu();
 	refreshActiveButtonInFontStylesMenu();
 	refreshRangeInFontSizeMenu();
+	refreshRangeInLineHeightMenu();
 	closeColorMenu();
 	titleHeightLimit("on");
 });
@@ -770,9 +864,18 @@ rangeFontSize.addEventListener("input", function (event) {
 	currentFontSize[currentFocusTextarea] = rangeFontSize.value;
 	refreshRangeInFontSizeMenu();
 	setCurrentFontSize();
+	if (currentFocusTextarea == "title") {titleHeightLimit("off");}
+});
+
+rangeLineHeight.addEventListener("input", function (event) {
+	currentLineHeight[currentFocusTextarea] = rangeLineHeight.value;
+	refreshRangeInLineHeightMenu();
+	setCurrentLineHeight();
+	if (currentFocusTextarea == "title") {titleHeightLimit("off");}
 });
 
 
 
 showSavedNotes();
 setVH();
+titleHeightLimit();

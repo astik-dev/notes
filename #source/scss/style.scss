@@ -257,7 +257,6 @@ h1 {
 				font-weight: 500;
 				padding: 0 1px 0px 1px;
 				overflow-y: auto;
-				height: 26px;
 
 				scrollbar-width: thin;
 				scrollbar-color: white #333; 
@@ -343,7 +342,8 @@ h1 {
 		#button__text-align,
 		#button__color,
 		#button__font-styles,
-		#button__font-size {
+		#button__font-size,
+		#button__line-height {
 			z-index: 1;
 			position: relative;		
 		}
@@ -353,10 +353,14 @@ h1 {
 				margin: 6px 0 0 0;
 			}
 		}
+		#button__line-height svg {
+			margin: 3px 0 0 0;
+		}
 		&__buttons-text-align,
 		&__buttons-color,
 		&__buttons-font-styles,
-		&__range-font-size {
+		&__range-font-size,
+		&__range-line-height {
 			display: grid;
 			gap: 3px;
 			justify-items: center;
@@ -396,11 +400,13 @@ h1 {
 		&__buttons-font-styles {
 			transition: all 0.25s linear;
 		}
-		&__range-font-size {
+		&__range-font-size,
+		&__range-line-height {
 			transition: all 0.3s linear;
 		}
 
-		&__range-font-size{
+		&__range-font-size, 
+		&__range-line-height {
 			grid-template-rows: auto 1fr;
 			position: relative;
 		}
