@@ -85,6 +85,10 @@ h1, h2, h3, h4, h5, h6 {
 	opacity: 1;
 }
 
+* {
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
 body {
 	background-color: #333;
 	font-family: "IBM Plex Mono", monospace;
@@ -178,6 +182,9 @@ input[type=range]::-moz-range-thumb {
 	background-color: rgba(51, 51, 51, 0.9);
 	color: rgba(255, 255, 255, 0.9);
 }
+.pop-up__buttons button:nth-child(1):active {
+	background-color: rgba(70, 70, 70, 0.9);
+}
 .pop-up__button {
 	font-size: 14px;
 	display: inline-block;
@@ -187,6 +194,9 @@ input[type=range]::-moz-range-thumb {
 	padding: 1px 5px;
 	font-weight: 700;
 	border: 2px solid rgba(255, 255, 255, 0.9);
+}
+.pop-up__button:active {
+	background-color: rgba(240, 240, 240, 0.9);
 }
 
 .wrapper {
@@ -581,6 +591,18 @@ input[type=range]::-moz-range-thumb {
 	color: #333;
 	font-weight: 500;
 }
+.wrapper .aside2__button:active {
+	background-color: #333;
+}
+.wrapper .aside2__button:active svg {
+	fill: #FFFFFF;
+}
+.wrapper .aside2__button:active div {
+	border: 1px solid #FFFFFF;
+}
+.wrapper .aside2__button:active span {
+	color: #fff;
+}
 .wrapper .aside2 #button__text-align,
 .wrapper .aside2 #button__color,
 .wrapper .aside2 #button__font-styles,
@@ -901,6 +923,9 @@ input[type=range]::-moz-range-thumb {
 .wrapper .settings__dropdown-item:last-child {
 	border-bottom: 0;
 }
+.wrapper .settings__dropdown-item:active {
+	background-color: #757575;
+}
 .wrapper .settings ._dropdown-item-active {
 	background-color: #757575;
 }
@@ -1060,6 +1085,9 @@ input[type=range]::-moz-range-thumb {
 	-webkit-transition: all 0.2s ease;
 	transition: all 0.2s ease;
 }
+.wrapper .settings__additional-button:active {
+	border-color: #f00;
+}
 .wrapper .settings__line {
 	width: 100%;
 	height: 1px;
@@ -1094,6 +1122,9 @@ input[type=range]::-moz-range-thumb {
 	font-weight: 400;
 	border: 1px solid #757575;
 }
+.wrapper .settings__control-button:active {
+	background-color: #444;
+}
 
 ._open-settings {
 	-ms-grid-columns: 1fr;
@@ -1119,14 +1150,10 @@ input[type=range]::-moz-range-thumb {
 
 @media (hover: hover) {
 	.pop-up__buttons button:nth-child(1):hover {
-		margin: 0 6px 0 0;
 		background-color: rgba(70, 70, 70, 0.9);
-		color: rgba(255, 255, 255, 0.9);
 	}
 	.pop-up__button:hover {
 		background-color: rgba(240, 240, 240, 0.9);
-		color: rgba(51, 51, 51, 0.9);
-		border: 2px solid rgba(240, 240, 240, 0.9);
 	}
 	.wrapper .header__menu-button:hover:after {
 		-webkit-transform: scale(1, 1);

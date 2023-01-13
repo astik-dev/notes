@@ -14,6 +14,10 @@
     opacity: 1;
 }
 
+*{
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
 
 
 body {
@@ -106,6 +110,10 @@ input[type=range] {
 			background-color: rgba(51, 51, 51, 0.9);
 			color: rgba(255, 255, 255, 0.9);
 		}
+
+		button:nth-child(1):active {
+			background-color: rgba(70, 70, 70, 0.9);
+		}
 	}
 	&__button {
 		font-size: 14px;
@@ -116,6 +124,10 @@ input[type=range] {
 		padding: 1px 5px;
 		font-weight: 700;
 		border: 2px solid rgba(255, 255, 255, 0.9);
+
+		&:active {
+			background-color: rgba(240, 240, 240, 0.9);
+		}
 	}
 }
 
@@ -426,6 +438,19 @@ input[type=range] {
 				font-size: 16px;
 				color: #333;
 				font-weight: 500; 
+			}
+
+			&:active {
+				background-color: #333;
+				svg {
+					fill: #FFFFFF;
+				}
+				div {
+					border: 1px solid #FFFFFF;
+				}
+				span {
+					color: #fff;
+				}
 			}
 		}
 		#button__text-align,
@@ -760,10 +785,14 @@ input[type=range] {
 			border-bottom: 1px solid #757575;
 			padding: 0 0 0 4px;
 			font-size: 14px;
-
 			cursor: pointer;
+
 			&:last-child {
 				border-bottom: 0;
+			}
+
+			&:active {
+				background-color: #757575;
 			}
 		}
 		._dropdown-item-active {
@@ -918,6 +947,10 @@ input[type=range] {
 			border-radius: 10px;
 			color: #f00;
 			transition: all 0.2s ease;
+
+			&:active {
+				border-color: #f00;
+			}
 		}
 
 		&__line {
@@ -947,6 +980,10 @@ input[type=range] {
 			&:nth-child(1) {
 				font-weight: 400;
 				border: 1px solid #757575;
+			}
+
+			&:active {
+				background-color: #444;
 			}
 		}
 	}
@@ -979,16 +1016,12 @@ input[type=range] {
 	.pop-up {
 		&__buttons {
 			button:nth-child(1):hover {
-				margin: 0 6px 0 0;
 				background-color: rgba(70, 70, 70, 0.9);
-				color: rgba(255, 255, 255, 0.9);
 			}
 		}
 		&__button {
 			&:hover {
 				background-color: rgba(240, 240, 240, 0.9);
-				color: rgba(51, 51, 51, 0.9);
-				border: 2px solid rgba(240, 240, 240, 0.9);
 			}
 		}
 	}
