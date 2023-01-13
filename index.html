@@ -36,15 +36,12 @@
 				<div class="header__title">
 					<h1>Notes</h1>
 				</div>
-				<div class="header__burger-menu">
-					<button class="header__burger-menu-button">
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
-						<div></div>
+				<div class="header__menu">
+					<button class="header__menu-button" id="header-menu-settings">Settings</button>
+				</div>
+				<div class="header__min-menu">
+					<button class="header__min-menu-button" id="header-min-menu-settings">
+						<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path  stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 21h-4l-.551-2.48a6.991 6.991 0 0 1-1.819-1.05l-2.424.763-2-3.464 1.872-1.718a7.055 7.055 0 0 1 0-2.1L3.206 9.232l2-3.464 2.424.763A6.992 6.992 0 0 1 9.45 5.48L10 3h4l.551 2.48a6.992 6.992 0 0 1 1.819 1.05l2.424-.763 2 3.464-1.872 1.718a7.05 7.05 0 0 1 0 2.1l1.872 1.718-2 3.464-2.424-.763a6.99 6.99 0 0 1-1.819 1.052L14 21z"/><circle  stroke="#fff" cx="12" cy="12" r="3" stroke-width="2"/></svg>
 						<div></div>
 						<div></div>
 					</button>
@@ -195,6 +192,179 @@
 					</button>
 				</div>
 			</aside>
+			<!-- =============== settings =============== -->
+			<div class="settings">
+				<div class="settings__body">
+					<div class="settings__title">Settings</div>
+					<div class="settings__text">Settings for creating new note</div>
+					<div class="settings__items">
+						<div class="settings__item">
+							<div class="settings__item-title">Alignment</div>
+							<div class="settings__item-setting-title-text _alignmment">
+								<div class="settings__item-setting-title">
+									Title:
+									<div class="settings__dropdown" id="dropdown-title-align">
+										<button class="settings__dropdown-button" id="dropdown-button-title-align">Justify</button>
+										<ul class="settings__dropdown-list">
+											<li class="settings__dropdown-item" data-value="left">Left</li>
+											<li class="settings__dropdown-item" data-value="center">Center</li>
+											<li class="settings__dropdown-item" data-value="right">Right</li>
+											<li class="settings__dropdown-item" data-value="justify">Justify</li>
+										</ul>
+									</div>	
+								</div>
+								<div class="settings__item-setting-text">
+									Text:
+									<div class="settings__dropdown" id="dropdown-text-align">
+										<button class="settings__dropdown-button" id="dropdown-button-text-align">Justify</button>
+										<ul class="settings__dropdown-list">
+											<li class="settings__dropdown-item" data-value="left">Left</li>
+											<li class="settings__dropdown-item" data-value="center">Center</li>
+											<li class="settings__dropdown-item" data-value="right">Right</li>
+											<li class="settings__dropdown-item" data-value="justify">Justify</li>
+										</ul>
+									</div>	
+								</div>
+							</div>
+						</div>
+						<div class="settings__item">
+							<div class="settings__item-title">Color</div>
+							<div class="settings__dropdown _dropdown-color"  id="dropdown-color">
+								<button class="settings__dropdown-button" id="dropdown-button-color"><div style="background-color: #FFFFFF;"></div>White</button>
+								<ul class="settings__dropdown-list">
+									<li class="settings__dropdown-item" data-value="#FFFFFF">White</li>
+									<li class="settings__dropdown-item" data-value="#ffc800">Yellow</li>
+									<li class="settings__dropdown-item" data-value="#fc8128">Orange</li>
+									<li class="settings__dropdown-item" data-value="#ff6e9a">Pink</li>
+									<li class="settings__dropdown-item" data-value="#50F40F">Green</li>
+									<li class="settings__dropdown-item" data-value="#3fcc9c">Light green</li>
+									<li class="settings__dropdown-item" data-value="#3BDBE9">Turquoise</li>
+									<li class="settings__dropdown-item" data-value="#3f94fc">Blue</li>
+									<li class="settings__dropdown-item" data-value="#ff5e5e">Red</li>
+								</ul>
+							</div>
+						</div>
+						<div class="settings__item">
+							<div class="settings__item-title">Styles</div>
+							<div class="settings__item-setting-title-text">
+								<div class="settings__item-setting-title" id="settings-checkboxes-title">
+									<div style="margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid #757575">Title:</div>
+									<button class="settings__checkbox" style="font-weight: 700;">Bold</button>
+									<button class="settings__checkbox" style="font-style: italic;">Italic</button>
+									<button class="settings__checkbox" style="text-decoration: underline;">Underline</button>
+								</div>
+								<div class="settings__item-setting-text" id="settings-checkboxes-text">
+									<div style="margin-bottom: 4px; padding-bottom: 4px; border-bottom: 1px solid #757575">Text:</div>
+									<button class="settings__checkbox" style="font-weight: 700;">Bold</button>
+									<button class="settings__checkbox" style="font-style: italic;">Italic</button>
+									<button class="settings__checkbox" style="text-decoration: underline;">Underline</button>
+								</div>
+							</div>
+						</div>
+						<div class="settings__item">
+							<div class="settings__item-title">Size</div>
+							<div class="settings__item-setting-title-text">
+								<div class="settings__item-setting-title">
+									Title: <span class="settings__range-value-text">16px</span>
+									<div class="settings__range-body">
+										<input type="range" min="12" max="28" step="2" class="settings__range" id="range-settings-size-title">
+										<div class="settings__range-steps">
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+										</div>
+									</div>
+								</div>
+								<div class="settings__item-setting-text">
+									Text: <span class="settings__range-value-text">16px</span>
+									<div class="settings__range-body">
+										<input type="range" min="12" max="28" step="2" class="settings__range" id="range-settings-size-text">
+										<div class="settings__range-steps">
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="settings__item">
+							<div class="settings__item-title">Line height</div>
+							<div class="settings__item-setting-title-text">
+								<div class="settings__item-setting-title">
+									Title: <span class="settings__range-value-text">20px</span>
+									<div class="settings__range-body">
+										<input type="range" min="12" max="36" step="2" class="settings__range" id="range-settings-lineheight-title">
+										<div class="settings__range-steps">
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+										</div>
+									</div>
+								</div>
+								<div class="settings__item-setting-text">
+									Text: <span class="settings__range-value-text">20px</span>
+									<div class="settings__range-body">
+										<input type="range" min="12" max="36" step="2" class="settings__range" id="range-settings-lineheight-text">
+										<div class="settings__range-steps">
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+											<div></div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="settings__item">
+							<div class="settings__item-title">Scroll</div>
+							<button class="settings__checkbox" id="checkbox-settings-horizontal-scroll">Horizontal scroll</button>
+						</div>
+					</div>
+					<div class="settings__control-buttons">
+						<button class="settings__control-button">Cancel</button>
+						<button class="settings__control-button">Save</button>
+					</div>
+					<div class="settings__line"></div>
+					<div class="settings__title">Additional settings</div>
+					<div class="settings__additional-items">
+						<button class="settings__additional-button">Set default settings</button>
+						<button class="settings__additional-button">Delete all notes</button>
+						<button class="settings__additional-button">Delete all data</button>
+					</div>
+				</div>
+			</div>
 		</div>
 		<script src="js/script.js"></script>
 	</body>

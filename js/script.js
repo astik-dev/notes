@@ -22,19 +22,39 @@ const lineHeightButton = aside2Menu.querySelector("#button__line-height");
 const rangeLineHeight = lineHeightMenu.querySelector("#range-line-height");
 const rangeNumberLineHeight = lineHeightMenu.querySelector(".aside2__range-number");
 const horizontalScrollButton = aside2Menu.querySelector("#button__horizontal-scroll");
+const settingsButton = document.querySelector("#header-menu-settings");
+const settingsMinButton = document.querySelector("#header-min-menu-settings");
+const wrapper = document.querySelector(".wrapper");
+const settingsMenu = document.querySelector(".settings");
+const settingsDropdown = document.querySelector(".settings__dropdown");
+const settingsDropdownButton = settingsDropdown.querySelector(".settings__dropdown-button");
+const rangeSettingsSizeTitle = settingsMenu.querySelector("#range-settings-size-title");
+const rangeSettingsSizeText = settingsMenu.querySelector("#range-settings-size-text");
+const rangeSettingsLineheightTitle = settingsMenu.querySelector("#range-settings-lineheight-title");
+const rangeSettingsLineheightText = settingsMenu.querySelector("#range-settings-lineheight-text");
 
 noteTitle.value = "";
 noteText.value = "";
+
 let currentNoteId;
-let currentAlign = {text: "left", title: "left",};
+let currentAlign;
 let currentFocusTextarea = "text";
-let currentColor = "#FFFFFF";
+let currentColor;
 let initialPoint;
 let finalPoint;
-let currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
-let currentFontSize = {title: 20, text: 16};
-let currentLineHeight = {title: 26, text: 16,};
-let currentHorizontalScroll = false;
+let currentFontStyles;
+let currentFontSize;
+let currentLineHeight;
+let currentHorizontalScroll;
+
+const defaultSettings = {
+	align: {text: "left", title: "left",},
+	color: "#FFFFFF",
+	fontStyles: {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},},
+	fontSize: {title: 20, text: 16},
+	lineHeight: {title: 26, text: 16,},
+	horizontalScroll: false,
+}
 
 
 if (localStorage.getItem("notes") == null) {
@@ -42,6 +62,13 @@ if (localStorage.getItem("notes") == null) {
 }
 let note = localStorage.getItem("notes");
 note = JSON.parse(note);
+
+if (localStorage.getItem("settings") == null) {
+	localStorage.setItem("settings", JSON.stringify(defaultSettings));
+}
+let userSettings = localStorage.getItem("settings");
+userSettings = JSON.parse(userSettings);
+
 
 
 
@@ -200,25 +227,9 @@ function addNewNote() {
 		noteTitle.value = "";
 		noteText.value = "";
 		currentNoteId = undefined;
-		currentAlign = {text: "left", title: "left",};
-		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
-		currentFontSize = {title: 20, text: 16};
-		currentLineHeight = {title: 26, text: 16,};
-		currentHorizontalScroll = false;
-		setCurrentFontStyles();
-		setCurrentAlign("title");
-		setCurrentAlign("text");
-		setCurrentFontSize();
-		setCurrentLineHeight();
-		setHorizontalScroll();
-		refreshActiveButtonInAlignMenu();
-		refreshActiveButtonInFontStylesMenu();
-		refreshRangeInFontSizeMenu();
-		refreshRangeInLineHeightMenu();
-		titleHeightLimit("off");
+		setUserSettings();
+		activateCurrentSettings();
 		markCurrentNote();
-		currentColor = "#FFFFFF";
-		setColor("new");
 		noteText.focus();
 	}
 }
@@ -306,47 +317,15 @@ function deleteNote() {
 		noteTitle.value = "";
 		noteText.value = "";
 		currentNoteId = undefined;
-		currentAlign = {text: "left", title: "left",};
-		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
-		currentFontSize = {title: 20, text: 16};
-		currentLineHeight = {title: 26, text: 16,};
-		currentHorizontalScroll = false;
-		setCurrentFontStyles();
-		setCurrentAlign("title");
-		setCurrentAlign("text");
-		setCurrentFontSize();
-		setCurrentLineHeight();
-		setHorizontalScroll();
-		refreshActiveButtonInAlignMenu();
-		refreshActiveButtonInFontStylesMenu();
-		refreshRangeInFontSizeMenu();
-		refreshRangeInLineHeightMenu();
-		titleHeightLimit("off");
-		currentColor = "#FFFFFF";
-		setColor("new");
+		setUserSettings();
+		activateCurrentSettings();
 		refreshSavedNotes();
 	} else {
 		noteTitle.value = "";
 		noteText.value = "";
 		currentNoteId = undefined;
-		currentAlign = {text: "left", title: "left",};
-		currentFontStyles = {title: {bold: false, italic: false, underline: false,}, text: {bold: false, italic: false, underline: false,},};
-		currentFontSize = {title: 20, text: 16};
-		currentLineHeight = {title: 26, text: 16,};
-		currentHorizontalScroll = false;
-		setCurrentFontStyles();
-		setCurrentFontSize();
-		setCurrentAlign("title");
-		setCurrentAlign("text");
-		setCurrentLineHeight();
-		setHorizontalScroll();
-		refreshActiveButtonInAlignMenu();
-		refreshActiveButtonInFontStylesMenu();
-		refreshRangeInFontSizeMenu();
-		refreshRangeInLineHeightMenu();
-		titleHeightLimit("off");
-		currentColor = "#FFFFFF";
-		setColor("new");
+		setUserSettings();
+		activateCurrentSettings();
 	}
 }
 
@@ -427,7 +406,7 @@ function popUp(title, text, button1Object, button2Object, popUpEmptyPlaceFunctio
 			popUpEmptyPlaceFunction();
 			closePopUp();
 		}
-	});
+	}, {once: true});
 }
 
 
@@ -639,7 +618,6 @@ function openClassForAside1(addRemoveToggle) {
 function titleHeightLimit(onOff) {
 	const currentMainHeight = document.querySelector(".main").clientHeight;
 	let availableTitleHeight;
-	let minLineHeight = currentLineHeight.title;
 
 	if (document.documentElement.clientWidth <= 767) {
 						  // = currentMainHeight - title.margin - line.margin - textarea.margin - (textarea.lineheight * 2)
@@ -724,11 +702,11 @@ function refreshActiveButtonInFontStylesMenu() {
 function setCurrentFontStyles() {
 	if (currentFontStyles.title.bold) {noteTitle.style.fontWeight = 700;} else {noteTitle.style.fontWeight = "";}
 	if (currentFontStyles.title.italic) {noteTitle.style.fontStyle = "italic";} else {noteTitle.style.fontStyle = "";}
-	if (currentFontStyles.title.underline) {noteTitle.style.textDecoration = "underline";} else {noteTitle.style.textDecoration = "";}
+	if (currentFontStyles.title.underline) {noteTitle.style.textDecoration = "underline"; noteTitle.classList.add("_underline-placeholder");} else {noteTitle.style.textDecoration = ""; noteTitle.classList.remove("_underline-placeholder");}
 
 	if (currentFontStyles.text.bold) {noteText.style.fontWeight = 700;} else {noteText.style.fontWeight = "";}
 	if (currentFontStyles.text.italic) {noteText.style.fontStyle = "italic";} else {noteText.style.fontStyle = "";}
-	if (currentFontStyles.text.underline) {noteText.style.textDecoration = "underline";} else {noteText.style.textDecoration = "";}
+	if (currentFontStyles.text.underline) {noteText.style.textDecoration = "underline"; noteText.classList.add("_underline-placeholder");} else {noteText.style.textDecoration = ""; noteText.classList.remove("_underline-placeholder");}
 }
 
 
@@ -841,6 +819,122 @@ function addOrRemoveHorizontalScroll () {
 
 
 
+function openAndCloseSettings() {
+
+	if (!wrapper.classList.contains("_open-settings")) {
+		toggleClasses();
+	} else {
+		let oldUserSettings = localStorage.getItem("settings");
+		let changedUserSettings = JSON.stringify(userSettings);
+		if (oldUserSettings != changedUserSettings) {
+			popUp("Settings not saved", "Are you sure you want to exit without saving?", {text: "Cancel", function(){}}, {text: "Exit", function(){toggleClasses(); resetChangedSettings();}}, function(){});
+		} else {
+			toggleClasses();
+			titleHeightLimit("off");
+		}
+	}
+
+	function toggleClasses() {
+		wrapper.classList.toggle("_open-settings");
+		settingsButton.classList.toggle("_active");
+		burgerAllNotesButton.parentNode.classList.toggle("_hide-burger");
+		settingsMinButton.classList.toggle("_open-min-menu");
+	}
+	function resetChangedSettings() {
+		userSettings = localStorage.getItem("settings");
+		userSettings = JSON.parse(userSettings);
+		setValuesInSettingsMenu();
+	}
+}
+
+
+
+function rangeInSettingsMenu (event) {
+	let valueText = event.target.parentNode.parentNode.querySelector(".settings__range-value-text");
+	valueText.textContent = event.target.value + "px";
+	if (event.target.id.includes("range-settings-size-")) {
+		let txt = event.target.id.slice(20);
+		userSettings.fontSize[txt] = Number(event.target.value);
+	} else if (event.target.id.includes("range-settings-lineheight-")) {
+		let txt = event.target.id.slice(26);
+		userSettings.lineHeight[txt] = Number(event.target.value);
+	}
+}
+
+
+
+function setUserSettings() {
+	currentLineHeight = {...userSettings.lineHeight};
+	currentAlign = {...userSettings.align};
+	currentColor = userSettings.color;
+	currentFontStyles = {...userSettings.fontStyles, title: {...userSettings.fontStyles.title}, text: {...userSettings.fontStyles.text}};
+	currentFontSize = {...userSettings.fontSize};
+	currentHorizontalScroll = userSettings.horizontalScroll;
+}
+
+
+
+function activateCurrentSettings () {
+	setCurrentFontStyles();
+	setCurrentAlign("title");
+	setCurrentAlign("text");
+	setCurrentFontSize();
+	setCurrentLineHeight();
+	setHorizontalScroll();
+	refreshActiveButtonInAlignMenu();
+	refreshActiveButtonInFontStylesMenu();
+	refreshRangeInFontSizeMenu();
+	refreshRangeInLineHeightMenu();
+	setColor("new");
+	titleHeightLimit("off");
+}
+
+
+
+function setValuesInSettingsMenu () {	
+	const alignTitleElem = settingsMenu.querySelector("#dropdown-title-align");
+	if (alignTitleElem.querySelector("._dropdown-item-active") != undefined) {alignTitleElem.querySelector("._dropdown-item-active").classList.remove("_dropdown-item-active");}
+	alignTitleElem.querySelector(`li[data-value="${userSettings.align.title}"]`).classList.add("_dropdown-item-active");
+	alignTitleElem.querySelector("#dropdown-button-title-align").textContent = alignTitleElem.querySelector(`li[data-value="${userSettings.align.title}"]`).textContent;
+	
+	const alignTextElem = settingsMenu.querySelector("#dropdown-text-align");
+	if (alignTextElem.querySelector("._dropdown-item-active") != undefined) {alignTextElem.querySelector("._dropdown-item-active").classList.remove("_dropdown-item-active");}
+	alignTextElem.querySelector(`li[data-value="${userSettings.align.text}"]`).classList.add("_dropdown-item-active");
+	alignTextElem.querySelector("#dropdown-button-text-align").textContent = alignTextElem.querySelector(`li[data-value="${userSettings.align.text}"]`).textContent;
+
+	const colorElem = settingsMenu.querySelector("#dropdown-color");
+	if (colorElem.querySelector("._dropdown-item-active") != undefined) {colorElem.querySelector("._dropdown-item-active").classList.remove("_dropdown-item-active");}
+	colorElem.querySelector(`li[data-value="${userSettings.color}"]`).classList.add("_dropdown-item-active");
+	colorElem.querySelector("#dropdown-button-color").innerHTML = `<div style="background-color: ${userSettings.color};"></div>${colorElem.querySelector(`li[data-value="${userSettings.color}"]`).textContent}`;
+
+	const styleTitleElem = settingsMenu.querySelector("#settings-checkboxes-title");
+	if (userSettings.fontStyles.title.bold) {styleTitleElem.querySelector("button:nth-child(2)").classList.add("_active-checkbox");} else {styleTitleElem.querySelector("button:nth-child(2)").classList.remove("_active-checkbox");}
+	if (userSettings.fontStyles.title.italic) {styleTitleElem.querySelector("button:nth-child(3)").classList.add("_active-checkbox");} else {styleTitleElem.querySelector("button:nth-child(3)").classList.remove("_active-checkbox");}
+	if (userSettings.fontStyles.title.underline) {styleTitleElem.querySelector("button:nth-child(4)").classList.add("_active-checkbox");} else {styleTitleElem.querySelector("button:nth-child(4)").classList.remove("_active-checkbox");}
+
+	const styleTextElem = settingsMenu.querySelector("#settings-checkboxes-text");
+	if (userSettings.fontStyles.text.bold) {styleTextElem.querySelector("button:nth-child(2)").classList.add("_active-checkbox");} else {styleTextElem.querySelector("button:nth-child(2)").classList.remove("_active-checkbox");}
+	if (userSettings.fontStyles.text.italic) {styleTextElem.querySelector("button:nth-child(3)").classList.add("_active-checkbox");} else {styleTextElem.querySelector("button:nth-child(3)").classList.remove("_active-checkbox");}
+	if (userSettings.fontStyles.text.underline) {styleTextElem.querySelector("button:nth-child(4)").classList.add("_active-checkbox");} else {styleTextElem.querySelector("button:nth-child(4)").classList.remove("_active-checkbox");}
+
+	rangeSettingsSizeTitle.value = userSettings.fontSize.title;
+	rangeSettingsSizeTitle.parentNode.parentNode.querySelector(".settings__range-value-text").textContent = userSettings.fontSize.title + "px";
+
+	rangeSettingsSizeText.value = userSettings.fontSize.text;
+	rangeSettingsSizeText.parentNode.parentNode.querySelector(".settings__range-value-text").textContent = userSettings.fontSize.text + "px";
+
+	rangeSettingsLineheightTitle.value = userSettings.lineHeight.title;
+	rangeSettingsLineheightTitle.parentNode.parentNode.querySelector(".settings__range-value-text").textContent = userSettings.lineHeight.title + "px";
+
+	rangeSettingsLineheightText.value = userSettings.lineHeight.text;
+	rangeSettingsLineheightText.parentNode.parentNode.querySelector(".settings__range-value-text").textContent = userSettings.lineHeight.text + "px";
+
+	const scrollElem = settingsMenu.querySelector("#checkbox-settings-horizontal-scroll");
+	if (userSettings.horizontalScroll) {scrollElem.classList.add("_active-checkbox");} else {scrollElem.classList.remove("_active-checkbox");}
+}
+
+
+
 
 
 
@@ -916,8 +1010,133 @@ rangeLineHeight.addEventListener("input", function (event) {
 	if (currentFocusTextarea == "title") {titleHeightLimit("off");}
 });
 
+settingsButton.addEventListener("click", openAndCloseSettings);
+settingsMinButton.addEventListener("click", openAndCloseSettings);
+
+settingsMenu.addEventListener("click", function (event) {
+	let activeDropdown = document.querySelector("._open-dropdown");
+	if (activeDropdown != undefined && event.target.id != activeDropdown.firstElementChild.id) {
+		activeDropdown.classList.remove("_open-dropdown");
+	}
+
+	if (event.target.id.includes("dropdown")) {
+		event.target.parentNode.classList.toggle("_open-dropdown");
+	}
+	if (event.target.classList.contains("settings__dropdown-item")) {
+		let activeItem = event.target.parentNode.querySelector("._dropdown-item-active");
+		if (activeItem != null) {
+			activeItem.classList.remove("_dropdown-item-active");
+		}
+
+		event.target.parentNode.parentNode.firstElementChild.textContent = event.target.textContent;
+
+		if (event.target.parentNode.parentNode.firstElementChild.id.includes("dropdown-button-color")) {
+			event.target.parentNode.parentNode.firstElementChild.innerHTML = `<div style="background-color: ${event.target.dataset.value};"></div>${event.target.textContent}`;
+		}
+
+		event.target.classList.add("_dropdown-item-active");
+
+		if (event.target.parentNode.parentNode.id == "dropdown-title-align") {
+			userSettings.align.title = event.target.dataset.value;
+		} else if (event.target.parentNode.parentNode.id == "dropdown-text-align") {
+			userSettings.align.text = event.target.dataset.value;
+		} else if (event.target.parentNode.parentNode.id == "dropdown-color") {
+			userSettings.color = event.target.dataset.value;
+		}
+	}
+
+	if (event.target.classList.contains("settings__checkbox")) {
+		event.target.classList.toggle("_active-checkbox");
+		
+		let checkboxValue = false;
+		if (event.target.classList.contains("_active-checkbox")) {
+			checkboxValue = true;
+		}
+
+		function newSettingStyle() {
+			let txt = event.target.parentNode.id.slice(20);
+			let styleType = event.target.textContent.toLowerCase();
+			userSettings.fontStyles[txt][styleType] = checkboxValue;
+		}
+		if (event.target.parentNode.id == "settings-checkboxes-title" || event.target.parentNode.id == "settings-checkboxes-text") {
+			newSettingStyle();
+		} else if (event.target.id == "checkbox-settings-horizontal-scroll") {
+			userSettings.horizontalScroll = checkboxValue;
+		}
+	}
+
+	if (event.target.classList.contains("settings__control-button")) {
+		if (event.target.textContent == "Cancel") {
+			userSettings = localStorage.getItem("settings");
+			userSettings = JSON.parse(userSettings);
+			setValuesInSettingsMenu();
+		} else if (event.target.textContent == "Save") {
+			localStorage.setItem("settings", JSON.stringify(userSettings));
+			if (currentNoteId == undefined && noteTitle.value == "" && noteText.value == "") {
+				setUserSettings();
+				activateCurrentSettings();
+			}
+
+			event.target.style.borderColor = "#02d102";
+			event.target.style.color = "#02d102";
+			function removeStyle() {
+				event.target.style.borderColor = "";
+				event.target.style.color = "";
+			};
+			setTimeout(removeStyle, 500);
+		}
+	}
+
+	if (event.target.classList.contains("settings__additional-button")) {
+
+		function setDefaultSettings() {
+			localStorage.setItem("settings", JSON.stringify(defaultSettings));
+			userSettings = localStorage.getItem("settings");
+			userSettings = JSON.parse(userSettings);
+			setValuesInSettingsMenu();
+			if (currentNoteId == undefined && noteTitle.value == "" && noteText.value == "") {
+				setUserSettings();
+				activateCurrentSettings();
+			}
+		}
+
+		function deleteAllNotes() {
+			localStorage.setItem("notes", JSON.stringify([]));
+			note = localStorage.getItem("notes");
+			note = JSON.parse(note);
+			showSavedNotes();
+			deleteNote();
+		}
+
+		if (event.target.textContent == "Set default settings") {
+
+			popUp("Set default settings", "Default settings will be set", {text: "Cancel", function(){}}, {text: "Set", function(){setDefaultSettings();}}, function(){});
+
+		} else if (event.target.textContent == "Delete all notes") {
+
+			popUp("Delete all notes", "All notes will be deleted", {text: "Cancel", function(){}}, {text: "Delete", function(){deleteAllNotes();}}, function(){});
+
+		} else if (event.target.textContent == "Delete all data") {
+
+			popUp("Delete all data", "All data (notes and settings) will be deleted", {text: "Cancel", function(){}}, {text: "Delete", function(){setDefaultSettings(); deleteAllNotes();}}, function(){});
+
+		}
+	}
+});
+
+rangeSettingsSizeTitle.addEventListener("input", rangeInSettingsMenu);
+rangeSettingsSizeText.addEventListener("input", rangeInSettingsMenu);
+rangeSettingsLineheightTitle.addEventListener("input", rangeInSettingsMenu);
+rangeSettingsLineheightText.addEventListener("input", rangeInSettingsMenu);
+
+window.addEventListener("load", function (event) {
+	setTimeout(titleHeightLimit, 500);
+});
 
 
+
+setUserSettings();
 showSavedNotes();
 setVH();
-titleHeightLimit();
+setValuesInSettingsMenu();
+activateCurrentSettings();
