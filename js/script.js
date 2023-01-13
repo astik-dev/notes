@@ -365,6 +365,24 @@ function popUp(title, text, button1Object, button2Object, popUpEmptyPlaceFunctio
 	closeFontSizeMenu();
 	closeLineHeightMenu();
 
+	const textareas = wrapper.getElementsByTagName("textarea");
+	const buttons = wrapper.getElementsByTagName("button");
+	const inputs = wrapper.getElementsByTagName("input");
+
+	function disableOtherInteractiveElements (trueFalse) {
+		for( let i = 0; i < textareas.length; i++ ){
+			textareas[i].disabled = trueFalse;
+		}
+		for( let i = 0; i < buttons.length; i++ ){
+			buttons[i].disabled = trueFalse;
+		}
+		for( let i = 0; i < inputs.length; i++ ){
+			inputs[i].disabled = trueFalse;
+		}
+	}
+
+	disableOtherInteractiveElements(true);
+
 	const popUpAllElements = document.querySelector(".pop-up");
 	const popUpBody = document.querySelector(".pop-up__body");
 	const popUpTitle = document.querySelector(".pop-up__title");
@@ -384,16 +402,16 @@ function popUp(title, text, button1Object, button2Object, popUpEmptyPlaceFunctio
 	popUpBody.style.opacity = 1;
 	popUpBody.style.transform = "scale(1, 1)";
 
-
 	function closePopUp() {
 		popUpAllElements.style.visibility = "";
 		popUpAllElements.style.opacity = "";
 
 		popUpBody.removeAttribute("style");
+		popUpAllElements.removeEventListener("click", popUpClick);
+		disableOtherInteractiveElements(false);
 	}
 
-
-	popUpAllElements.addEventListener("click", function (event) {
+	function popUpClick(event) {
 		if (event.target.getAttribute("class") == "pop-up__button") {
 			if (event.target.id == "pop-up__button1") {
 				button1Object.function();
@@ -406,7 +424,9 @@ function popUp(title, text, button1Object, button2Object, popUpEmptyPlaceFunctio
 			popUpEmptyPlaceFunction();
 			closePopUp();
 		}
-	}, {once: true});
+	}
+
+	popUpAllElements.addEventListener("click", popUpClick);
 }
 
 
