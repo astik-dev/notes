@@ -71,7 +71,6 @@ userSettings = JSON.parse(userSettings);
 
 
 
-
 function errorButton (idButton, errorClass) {
 	const button = document.querySelector(`#${idButton}`);
 	button.classList.add(errorClass);
@@ -95,7 +94,7 @@ function checkEmptyValue (idButton, errorClass) {
 		setTimeout(removeError, 1000);
 		return "empty";
 	} else {
-		return "notEmpty"
+		return "notEmpty";
 	}
 }
 
@@ -231,6 +230,8 @@ function addNewNote() {
 		activateCurrentSettings();
 		markCurrentNote();
 		noteText.focus();
+
+		localStorage.removeItem("lastOpenedNoteId");
 	}
 }
 
@@ -267,43 +268,71 @@ function cutTitle (title, maxLength, endSymbol) {
 
 
 
-function importNoteIntoEditor (event) {
+function importNoteIntoEditor (event, openLastOpenedNote) {
 	let noteId;
-
-	noteId = findIdWithSVG(event.target, "note_");
-
+	if (openLastOpenedNote == true) {
+		noteId = `note_${currentNoteId}`;
+	} else {
+		noteId = findIdWithSVG(event.target, "note_");
+	}
 	if (noteId != undefined) {
-		closeTextAlignMenu();
-		closeColorMenu();
-		closeFontStylesMenu();
-		closeFontSizeMenu();
-		closeLineHeightMenu();
+		if (noteId.slice(5) == currentNoteId && openLastOpenedNote == undefined) {
+			addNewNote();
+		} else {
+			closeTextAlignMenu();
+			closeColorMenu();
+			closeFontStylesMenu();
+			closeFontSizeMenu();
+			closeLineHeightMenu();
 
-		let notePositionInArray = Number(noteId.substr(5));
-		currentNoteId = notePositionInArray;
-		noteTitle.value = note[notePositionInArray].title;
-		noteText.value = note[notePositionInArray].text;
-		currentAlign = {...note[notePositionInArray].settings.align};
-		currentFontStyles = {...note[notePositionInArray].settings.fontStyles, title: {...note[notePositionInArray].settings.fontStyles.title}, text: {...note[notePositionInArray].settings.fontStyles.text}};
-		currentFontSize = {...note[notePositionInArray].settings.fontSize};
-		currentLineHeight = {...note[notePositionInArray].settings.lineHeight};
-		currentHorizontalScroll = note[notePositionInArray].settings.horizontalScroll;
+			if (openLastOpenedNote == undefined) {
+				if (currentNoteId != undefined) {
+					if (noteTitle.value == "" && noteText.value == "") {
+						errorButton("button__save", "_error");
+						noteBody.classList.add("_error");
+						function removeError() {
+							noteBody.classList.remove('_error');
+						};
+						setTimeout(removeError, 1000);
+						return;
+					} else {
+						saveOldNote("button__save", "_error");
+					}
+				} else {
+					if (noteTitle.value != "" || noteText.value != "") {
+						saveNewNote("button__save", "_error");
+					}
+				}
+			}	
 
-		setCurrentAlign("title");
-		setCurrentAlign("text");
-		setCurrentFontStyles();
-		setCurrentFontSize();
-		setCurrentLineHeight();
-		setHorizontalScroll();
-		refreshActiveButtonInAlignMenu();
-		refreshActiveButtonInColorMenu();
-		refreshActiveButtonInFontStylesMenu();
-		refreshRangeInFontSizeMenu();
-		refreshRangeInLineHeightMenu();
-		titleHeightLimit("on");
-		markCurrentNote();
-		setColor("import");
-		titleHeightLimit("on");
+			let notePositionInArray = Number(noteId.substr(5));
+			currentNoteId = notePositionInArray;
+			noteTitle.value = note[notePositionInArray].title;
+			noteText.value = note[notePositionInArray].text;
+			currentAlign = {...note[notePositionInArray].settings.align};
+			currentFontStyles = {...note[notePositionInArray].settings.fontStyles, title: {...note[notePositionInArray].settings.fontStyles.title}, text: {...note[notePositionInArray].settings.fontStyles.text}};
+			currentFontSize = {...note[notePositionInArray].settings.fontSize};
+			currentLineHeight = {...note[notePositionInArray].settings.lineHeight};
+			currentHorizontalScroll = note[notePositionInArray].settings.horizontalScroll;
+
+			setCurrentAlign("title");
+			setCurrentAlign("text");
+			setCurrentFontStyles();
+			setCurrentFontSize();
+			setCurrentLineHeight();
+			setHorizontalScroll();
+			refreshActiveButtonInAlignMenu();
+			refreshActiveButtonInColorMenu();
+			refreshActiveButtonInFontStylesMenu();
+			refreshRangeInFontSizeMenu();
+			refreshRangeInLineHeightMenu();
+			titleHeightLimit("on");
+			markCurrentNote();
+			setColor("import");
+			titleHeightLimit("on");
+
+			localStorage.setItem("lastOpenedNoteId", currentNoteId);
+		}
 	}
 }
 
@@ -320,6 +349,7 @@ function deleteNote() {
 		setUserSettings();
 		activateCurrentSettings();
 		refreshSavedNotes();
+		localStorage.removeItem("lastOpenedNoteId");
 	} else {
 		noteTitle.value = "";
 		noteText.value = "";
@@ -955,6 +985,31 @@ function setValuesInSettingsMenu () {
 
 
 
+function checkChanges(object) {
+	if (
+		currentAlign.title != object.align.title ||
+		currentAlign.text != object.align.text ||
+		currentFontSize.title != object.fontSize.title ||
+		currentFontSize.text != object.fontSize.text ||
+		currentLineHeight.title != object.lineHeight.title ||
+		currentLineHeight.text != object.lineHeight.text ||
+		currentHorizontalScroll != object.horizontalScroll ||
+		currentColor != object.color ||
+		currentFontStyles.title.bold != object.fontStyles.title.bold ||
+		currentFontStyles.title.italic != object.fontStyles.title.italic ||
+		currentFontStyles.title.underline != object.fontStyles.title.underline ||
+		currentFontStyles.text.bold != object.fontStyles.text.bold ||
+		currentFontStyles.text.italic != object.fontStyles.text.italic ||
+		currentFontStyles.text.underline != object.fontStyles.text.underline
+		) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+
+
 
 
 
@@ -1153,6 +1208,25 @@ window.addEventListener("load", function (event) {
 	setTimeout(titleHeightLimit, 500);
 });
 
+window.addEventListener("beforeunload", function (event) {
+	if (currentNoteId != undefined) {
+		if (noteTitle.value != note[currentNoteId].title || noteText.value != note[currentNoteId].text) {
+			event.preventDefault();
+			event.returnValue = "";
+		} 
+	} else {
+		if (noteTitle.value != "" || noteText.value != "" || checkChanges(userSettings)) {
+			event.preventDefault();
+			event.returnValue = "";
+		}
+	}
+
+	if (JSON.stringify(userSettings) != localStorage.getItem("settings")) {
+		event.preventDefault();
+		event.returnValue = "";
+	}
+});
+
 
 
 setUserSettings();
@@ -1160,3 +1234,8 @@ showSavedNotes();
 setVH();
 setValuesInSettingsMenu();
 activateCurrentSettings();
+
+if (localStorage.getItem("lastOpenedNoteId") != null) {
+	currentNoteId = localStorage.getItem("lastOpenedNoteId");
+	importNoteIntoEditor(false, true);
+}

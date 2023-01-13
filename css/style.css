@@ -428,15 +428,11 @@ input[type=range]::-moz-range-thumb {
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
-	-webkit-transition: all 0.15s linear 0s;
-	transition: all 0.15s linear 0s;
 }
 .wrapper .aside1__button svg {
 	fill: #333;
 	height: 18px;
 	margin: 1px 4px 0 0;
-	-webkit-transition: all 0.15s linear 0s;
-	transition: all 0.15s linear 0s;
 }
 .wrapper .main {
 	border-left: 1px solid #FFFFFF;

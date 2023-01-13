@@ -315,14 +315,10 @@ input[type=range] {
 			overflow: hidden;
 			display: flex;
 
-			transition: all 0.15s linear 0s;
-
 			svg {
 				fill: #333;
 				height: 18px;
 				margin: 1px 4px 0 0;
-
-				transition: all 0.15s linear 0s;
 			}
 		}
 	}
