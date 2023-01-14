@@ -158,6 +158,8 @@ function saveNewNote (idButton, errorClass) {
 
 		setColorStyles(currentNoteId);
 		markCurrentNote();
+
+		localStorage.setItem("lastOpenedNoteId", currentNoteId);
 	}
 }
 
