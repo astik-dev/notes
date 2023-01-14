@@ -168,16 +168,26 @@ function showSavedNotes () {
 		let noteLength = note.length - 1;
 		for (i = 0; i <= noteLength; i++) {
 			let minTitle;
+			let titleAttribute;
 			if (note[i].title == "") {
 				minTitle = cutTitle(note[i].text, 18, "..");
+				if (note[i].text.length >= 19) {
+					titleAttribute = note[i].text;
+				}
 			} else {
 				minTitle = cutTitle(note[i].title, 18, "..");
+				if (note[i].title.length >= 19) {
+					titleAttribute = note[i].title;
+				}
 			}
 			aside1AllNotes.insertAdjacentHTML("afterbegin", `<li class="aside1__all-notes-item">
 																<button class="aside1__button" id="note_${i}"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21 22H3V2h12v2h2v2h2v2h2v14zM17 6h-2v2h2V6zM5 4v16h14V10h-6V4H5zm8 12H7v2h6v-2zm-6-4h10v2H7v-2zm4-4H7v2h4V8z" /></svg><span></span></button>
 		 													</li>`);
 			let textSpan = aside1AllNotes.querySelector(`#note_${i} span`);
 			textSpan.textContent = minTitle;
+			if (titleAttribute != undefined) {
+				aside1AllNotes.querySelector(`#note_${i}`).setAttribute('title', `${titleAttribute}`);
+			}
 			setColorStyles(i);
 		}
 	} else {
@@ -1205,7 +1215,9 @@ rangeSettingsLineheightTitle.addEventListener("input", rangeInSettingsMenu);
 rangeSettingsLineheightText.addEventListener("input", rangeInSettingsMenu);
 
 window.addEventListener("load", function (event) {
-	setTimeout(titleHeightLimit, 500);
+	if (currentNoteId == undefined) {
+		setTimeout(titleHeightLimit, 500);
+	}
 });
 
 window.addEventListener("beforeunload", function (event) {
