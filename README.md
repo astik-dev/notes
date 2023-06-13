@@ -1,7 +1,7 @@
 # Notes
 ### **Description:**
 **Notes** - web application for creating notes.  
-Link: https://ast-astik.github.io/notes
+Link: https://astik-dev.github.io/notes/
 ### **Functional:**
 1. #### Note management:
     - *Saving note*
